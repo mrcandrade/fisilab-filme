@@ -352,6 +352,8 @@ fn view_menu_and_settings_name_each_color_theme_alike() {
     d.menu("app.settings.appearance");
     // the theme cards' choices (the single Color Theme is no longer drawn)
     for (menu_id, id) in [
+        ("view.theme.ufrgsNoite", "settings.appearance.darkTheme.ufrgsNoite"),
+        ("view.theme.ufrgsDia", "settings.appearance.lightTheme.ufrgsDia"),
         ("view.theme.dark", "settings.appearance.darkTheme.darkest"),
         ("view.theme.medium", "settings.appearance.darkTheme.dark"),
         ("view.theme.light", "settings.appearance.lightTheme.light"),

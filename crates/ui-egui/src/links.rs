@@ -1,29 +1,29 @@
-//! Community and project links (Help menu, About dialog, header Discord button, Home screen).
+//! Community and project links (Help menu, About dialog, header Suíte FisiLab button, Home
+//! screen).
 //!
-//! FilmCraft is part of the ArtCraft family: the community lives on the ArtCraft Discord, every
-//! app has a page on the ArtCraft website and a public GitHub repository.
+//! FisiFilme is part of the Suíte FisiLab (FisiLab — LARFIC · UFRGS, with the CTA — Centro de
+//! Tecnologia Acadêmica). Its links point at the suite, the free-technology manifesto, the
+//! upstream project it is based on (FilmCraft) and this fork's issue tracker. Nothing points at
+//! the upstream community or website.
 
-/// The app's short name, used in the website and repository URLs.
-pub const APP: &str = "filmcraft";
+/// The app's short name, used in the repository URLs.
+pub const APP: &str = "fisifilme";
 
-/// The ArtCraft community Discord.
-pub const DISCORD: &str = "https://discord.gg/artcraft";
-/// The ArtCraft website.
-pub const WEBSITE: &str = "https://getartcraft.com";
-/// FilmCraft's page on the ArtCraft website.
-pub const APP_PAGE: &str = "https://getartcraft.com/apps/filmcraft";
-/// FilmCraft's source repository.
-pub const GITHUB: &str = "https://github.com/storytold/filmcraft";
-/// New issue on FilmCraft's repository.
-pub const ISSUES: &str = "https://github.com/storytold/filmcraft/issues";
+/// The Suíte FisiLab page (source, installers, credits).
+pub const SUITE: &str = fisilab_brand::SUITE_URL;
+/// The manifesto for free technologies.
+pub const MANIFESTO: &str = fisilab_brand::MANIFESTO_URL;
+/// The upstream project FisiFilme is based on (FilmCraft, by the ArtCraft Team and contributors).
+pub const UPSTREAM: &str = "https://github.com/storytold/filmcraft";
+/// New issue on FisiFilme's repository.
+pub const ISSUES: &str = "https://github.com/mrcandrade/fisifilme/issues";
 
 /// (command id, label, url) for every link, in menu order.
-pub const ALL: [(&str, &str, &str); 5] = [
-    ("help.discord", "Join the ArtCraft Discord…", DISCORD),
-    ("help.website", "ArtCraft Website", WEBSITE),
-    ("help.appPage", "FilmCraft on getartcraft.com", APP_PAGE),
-    ("help.github", "FilmCraft on GitHub", GITHUB),
-    ("help.reportIssue", "Report an Issue…", ISSUES),
+pub const ALL: [(&str, &str, &str); 4] = [
+    ("help.suite", "Site da Suíte FisiLab", SUITE),
+    ("help.manifesto", "Manifesto pelas tecnologias livres", MANIFESTO),
+    ("help.upstream", "Projeto original (FilmCraft)", UPSTREAM),
+    ("help.reportIssue", "Reportar um problema", ISSUES),
 ];
 
 /// A link the web browser couldn't open (`ui.failedLink`): the address and the reason.
@@ -39,7 +39,7 @@ pub fn url_for(command: &str) -> Option<&'static str> {
 }
 
 /// What a Help menu item does, shown when the pointer rests on it: the address a link opens in
-/// the web browser, or that the item stays inside FilmCraft.
+/// the web browser, or that the item stays inside FisiFilme.
 pub fn menu_hint(command: &str) -> Option<String> {
     let url = if command == "help.filmcraftHelp" { Some(crate::panels::keyboard::HELP_URL) } else { url_for(command) };
     if let Some(url) = url {
@@ -49,7 +49,8 @@ pub fn menu_hint(command: &str) -> Option<String> {
         match command {
             "help.revealLogFiles" => tl!("Saves this session's log and shows it in your file manager."),
             "help.systemCompatibilityReport" => tl!("Shows a report on this computer."),
-            "app.about" => tl!("Shows the version, community links and credits in a FilmCraft window."),
+            "app.about" => tl!("Shows the version, community links and credits in a FisiFilme window."),
+            "help.fisilab" => tl!("Abre a janela Sobre a Suíte FisiLab: créditos, manifesto e parceiros."),
             _ => return None,
         }
         .to_string(),
@@ -125,17 +126,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn urls_follow_the_artcraft_scheme() {
-        assert_eq!(APP_PAGE, format!("{WEBSITE}/apps/{APP}"));
-        assert_eq!(GITHUB, format!("https://github.com/storytold/{APP}"));
+    fn urls_point_at_the_suite_the_manifesto_upstream_and_this_fork() {
+        assert_eq!(ISSUES, format!("https://github.com/mrcandrade/{APP}/issues"));
         assert!(ALL.iter().all(|(id, _, u)| id.starts_with("help.") && u.starts_with("https://")));
-        assert_eq!(url_for("help.discord"), Some(DISCORD));
+        assert!(ALL.iter().all(|(_, _, u)| !u.contains("discord") && !u.contains("getartcraft")), "no upstream community links");
+        assert_eq!(url_for("help.suite"), Some(fisilab_brand::SUITE_URL));
+        assert_eq!(url_for("help.manifesto"), Some(fisilab_brand::MANIFESTO_URL));
+        assert_eq!(url_for("help.upstream"), Some(UPSTREAM));
         assert_eq!(url_for("help.nope"), None);
     }
 
     #[test]
     fn links_open_through_the_host_hook() {
-        // #642: on the desktop every link (Help menu, About, Discord button, Import screen) must
+        // #642: on the desktop every link (Help menu, About, Import screen) must
         // reach the host's browser opener; `ctx.open_url` alone is a no-op natively.
         use std::cell::RefCell;
         use std::rc::Rc;
@@ -152,8 +155,8 @@ mod tests {
             assert_eq!(r["url"], url, "{id}");
             assert_eq!(opened.borrow().last().map(String::as_str), Some(url), "{id}");
         }
-        open(&mut app, &ctx, DISCORD);
-        assert_eq!(opened.borrow().last().map(String::as_str), Some(DISCORD));
+        open(&mut app, &ctx, SUITE);
+        assert_eq!(opened.borrow().last().map(String::as_str), Some(SUITE));
         assert_eq!(opened.borrow().len(), ALL.len() + 1);
 
         // A failing opener falls back to `ctx.open_url` instead of losing the click.
@@ -180,11 +183,11 @@ mod tests {
             out.textures_delta.clear();
             out
         };
-        open(&mut app, &egui::Context::default(), GITHUB);
+        open(&mut app, &egui::Context::default(), UPSTREAM);
         for _ in 0..3 {
             frame(&mut app, Vec::new());
         }
-        assert!(app.auto.elements.iter().find(|e| e.id == "failedLink.url").is_some_and(|e| e.label == GITHUB), "address shown");
+        assert!(app.auto.elements.iter().find(|e| e.id == "failedLink.url").is_some_and(|e| e.label == UPSTREAM), "address shown");
         let at = |app: &crate::FilmcraftApp, id: &str| {
             app.auto.elements.iter().find(|e| e.id == id).map(|e| egui::pos2(e.rect[0] + e.rect[2] / 2.0, e.rect[1] + e.rect[3] / 2.0)).unwrap()
         };
@@ -200,7 +203,7 @@ mod tests {
             copied
         };
         let copy = at(&app, "failedLink.copy");
-        assert_eq!(click(&mut app, copy), [GITHUB]);
+        assert_eq!(click(&mut app, copy), [UPSTREAM]);
         // other frames (another window in front) don't close it; Close does
         for _ in 0..3 {
             frame(&mut app, Vec::new());

@@ -1,11 +1,16 @@
 [package]
 name = "filmcraft"
-description = "FilmCraft desktop app"
+description = "FisiFilme desktop app (Suíte FisiLab; based on FilmCraft)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-default-run = "filmcraft"
+default-run = "fisifilme"
 build = "build.rs"
+
+# Suíte FisiLab: the GUI executable is fisifilme(.exe); the package name stays `filmcraft`.
+[[bin]]
+name = "fisifilme"
+path = "src/main.rs"
 
 [lints]
 workspace = true
@@ -26,6 +31,7 @@ filmcraft-time = { workspace = true }
 filmcraft-gpu = { workspace = true }
 filmcraft-ui-egui = { workspace = true }
 filmcraft-platform = { workspace = true }
+fisilab-brand = { workspace = true }
 egui = { workspace = true }
 eframe = { workspace = true, features = ["default_fonts", "wgpu", "accesskit", "wayland", "x11"] }
 serde_json = { workspace = true }

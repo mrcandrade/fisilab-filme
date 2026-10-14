@@ -244,7 +244,7 @@ fn theme_preview(ui: &mut Ui, t: &Tokens, width: f32) {
 fn theme_card(app: &mut FilmcraftApp, ui: &mut Ui, d: &mut SettingsDraft, key: &str, title: &str, opts: &[(&str, &str)], active: bool, width: f32) {
     let t = app.tokens;
     let current = choice_text(get(&d.values, key));
-    let shown = opts.iter().find(|(v, _)| *v == current).or(opts.first()).map_or("darkest", |(v, _)| v);
+    let shown = opts.iter().find(|(v, _)| *v == current).or(opts.first()).map_or("ufrgsNoite", |(v, _)| v);
     let highlight = settings::parse_hex(&choice_text(get(&d.values, "appearance.highlightColor")));
     let contrast = get(&d.values, "appearance.accessibleContrast").as_bool().unwrap_or(false);
     let look = Tokens::for_kind(crate::theme::ThemeKind::from_pref(shown)).with_appearance(highlight, contrast);
@@ -750,7 +750,7 @@ fn custom(app: &mut FilmcraftApp, ui: &mut Ui, d: &mut SettingsDraft, name: &str
         "memoryInfo" => {
             let (used, budget) = app.frames.cache_usage();
             note(ui, &t, &tlf!("Decoded frames held for the monitors and thumbnails: {used} of {budget}.", used = mb(used as u64), budget = mb(budget as u64)));
-            note(ui, &t, tl!("FilmCraft keeps the rest of the RAM free for other applications."));
+            note(ui, &t, tl!("FisiFilme keeps the rest of the RAM free for other applications."));
         }
         "mediaCacheInfo" => {
             if d.cache_info.is_null() {
@@ -907,7 +907,7 @@ pub fn show(app: &mut FilmcraftApp, ctx: &egui::Context) -> bool {
         ui.horizontal(|ui| {
             ui.add_space(20.0);
             if button(app, ui, "settings.help", tl!("Help"), false) {
-                crate::links::open(app, ctx, &format!("{}/blob/main/docs/project-files.md#settings", crate::links::GITHUB));
+                crate::links::open(app, ctx, &format!("{}/blob/main/docs/project-files.md#settings", crate::links::UPSTREAM));
             }
             if button(app, ui, "settings.reset", tl!("Reset…"), false) {
                 // this category back to its defaults (OK applies it)
@@ -985,7 +985,7 @@ mod tests {
         h.get_by_label("Light").click();
         h.run_steps(3);
         assert_eq!(h.state().session.prefs.appearance.appearance_mode, "light");
-        assert_eq!(h.state().session.prefs.appearance.dark_theme, "darkest");
+        assert_eq!(h.state().session.prefs.appearance.dark_theme, "ufrgsNoite");
     }
 
     /// #457: on a desktop that reports 150%, UI Scale 100% makes a point one physical pixel. It is
@@ -1017,14 +1017,14 @@ mod tests {
         let ctx = egui::Context::default();
         let mut app = FilmcraftApp::new(filmcraft_engine::Session::default());
         app.apply_prefs(&ctx);
-        assert_eq!((app.session.prefs.appearance.appearance_mode.as_str(), app.tokens.kind), ("dark", ThemeKind::Dark), "new users keep Darkest");
+        assert_eq!((app.session.prefs.appearance.appearance_mode.as_str(), app.tokens.kind), ("dark", ThemeKind::UfrgsNoite), "new users get UFRGS Noite");
         app.session.execute("prefs.set", json!({"values": {"appearance.darkTheme": "dark"}})).unwrap();
         app.hooks.system_theme = Some(Box::new(|_| Some(egui::Theme::Dark)));
-        for (mode, shown) in [("auto", ThemeKind::Medium), ("light", ThemeKind::Light), ("dark", ThemeKind::Medium), ("auto", ThemeKind::Medium)] {
+        for (mode, shown) in [("auto", ThemeKind::Medium), ("light", ThemeKind::UfrgsDia), ("dark", ThemeKind::Medium), ("auto", ThemeKind::Medium)] {
             cycle_appearance(&mut app, &ctx);
             assert_eq!(app.session.prefs.appearance.appearance_mode, mode);
             assert_eq!(app.tokens.kind, shown, "{mode}");
-            assert_eq!((app.session.prefs.appearance.dark_theme.as_str(), app.session.prefs.appearance.light_theme.as_str()), ("dark", "light"));
+            assert_eq!((app.session.prefs.appearance.dark_theme.as_str(), app.session.prefs.appearance.light_theme.as_str()), ("dark", "ufrgsDia"));
         }
         // View ▸ Appearance picks a theme and fixes the mode to its family
         set_theme(&mut app, &ctx, ThemeKind::Light);
@@ -1051,24 +1051,24 @@ mod tests {
         }));
         app.session.execute("prefs.set", json!({"key": "appearance.appearanceMode", "value": "auto"})).unwrap();
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::Light);
+        assert_eq!(app.tokens.kind, ThemeKind::UfrgsDia);
         assert!(!app.ui.dark);
-        assert_eq!(ctx.theme(), egui::Theme::Light, "egui's style follows FilmCraft's choice");
+        assert_eq!(ctx.theme(), egui::Theme::Light, "egui's style follows FisiFilme's choice");
         system.store(1, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::Dark);
+        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite);
         assert_eq!(ctx.theme(), egui::Theme::Dark);
         system.store(2, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::Light);
+        assert_eq!(app.tokens.kind, ThemeKind::UfrgsDia);
         system.store(0, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::Dark, "no answer: dark");
+        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite, "no answer: dark");
         // a fixed mode ignores the system
         app.session.execute("prefs.set", json!({"key": "appearance.appearanceMode", "value": "dark"})).unwrap();
         system.store(2, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::Dark);
+        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite);
     }
 
     #[test]

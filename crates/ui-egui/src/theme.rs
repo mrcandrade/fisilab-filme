@@ -1,17 +1,26 @@
 //! Design tokens. Every widget reads colours/sizes from [`Tokens`] so themes apply everywhere.
 //!
-//! The default theme follows the look of Premiere Pro's current dark UI (values measured from
-//! black-box screenshots, see `plan/premiere/02-ui-ux.md`); fonts are Inter + JetBrains Mono (OFL).
+//! Suíte FisiLab: the default theme is "UFRGS Noite" (dark), with "UFRGS Dia" (light) beside it;
+//! both are built from the brand tones in `fisilab_brand::palette` ([`NOITE`] / [`DIA`]) and keep
+//! the layout (radii, gaps, tab heights) of the upstream Darkest theme. The upstream themes
+//! (Darkest, Dark, Light: the look of Premiere Pro's current UI, values measured from black-box
+//! screenshots, see `plan/premiere/02-ui-ux.md`) stay available. Fonts are Inter + JetBrains Mono
+//! (OFL).
 
 use std::sync::Arc;
 
 use egui::{Color32, FontData, FontDefinitions, FontFamily, FontId, Stroke, TextStyle, Visuals};
+use fisilab_brand::palette::{DIA, NOITE, Tons};
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ThemeKind {
-    /// Premiere-style darkest (default).
+    /// Suíte FisiLab "UFRGS Noite": dark, from the brand tones (default).
     #[default]
+    UfrgsNoite,
+    /// Suíte FisiLab "UFRGS Dia": light, in the cream of the LARFIC logo.
+    UfrgsDia,
+    /// Premiere-style darkest.
     Dark,
     /// Slightly lighter grey panels (Premiere's brightness slider mid position).
     Medium,
@@ -19,23 +28,45 @@ pub enum ThemeKind {
 }
 
 impl ThemeKind {
-    /// Settings ▸ Appearance ▸ Color Theme value (`darkest`, `dark`, `light`).
+    /// Every theme, in the order Settings and View ▸ Appearance list them.
+    pub const ALL: [ThemeKind; 5] = [ThemeKind::UfrgsNoite, ThemeKind::UfrgsDia, ThemeKind::Dark, ThemeKind::Medium, ThemeKind::Light];
+
+    /// Settings ▸ Appearance ▸ Color Theme value (`ufrgsNoite`, `ufrgsDia`, `darkest`, `dark`, `light`).
     pub fn pref_name(self) -> &'static str {
         match self {
+            ThemeKind::UfrgsNoite => "ufrgsNoite",
+            ThemeKind::UfrgsDia => "ufrgsDia",
             ThemeKind::Dark => "darkest",
             ThemeKind::Medium => "dark",
             ThemeKind::Light => "light",
         }
     }
+    /// The theme of a Color Theme value; anything unknown is the default (UFRGS Noite).
     pub fn from_pref(s: &str) -> ThemeKind {
         match s {
+            "ufrgsDia" => ThemeKind::UfrgsDia,
+            "darkest" => ThemeKind::Dark,
             "dark" => ThemeKind::Medium,
             "light" => ThemeKind::Light,
-            _ => ThemeKind::Dark,
+            _ => ThemeKind::UfrgsNoite,
+        }
+    }
+    /// A light theme (dark text on light chrome).
+    pub fn is_light(self) -> bool {
+        matches!(self, ThemeKind::Light | ThemeKind::UfrgsDia)
+    }
+    /// The brand tones of a Suíte FisiLab theme (`None` for the upstream themes).
+    pub fn brand_tones(self) -> Option<&'static Tons> {
+        match self {
+            ThemeKind::UfrgsNoite => Some(&NOITE),
+            ThemeKind::UfrgsDia => Some(&DIA),
+            _ => None,
         }
     }
     pub fn from_name(s: &str) -> Option<ThemeKind> {
         match s.to_ascii_lowercase().as_str() {
+            "ufrgsnoite" | "ufrgs-noite" | "ufrgs noite" | "noite" => Some(ThemeKind::UfrgsNoite),
+            "ufrgsdia" | "ufrgs-dia" | "ufrgs dia" | "dia" => Some(ThemeKind::UfrgsDia),
             "dark" | "darkest" => Some(ThemeKind::Dark),
             "medium" | "grey" | "gray" => Some(ThemeKind::Medium),
             "light" => Some(ThemeKind::Light),
@@ -242,6 +273,8 @@ impl Tokens {
             tab_h: 32.0,
         };
         match kind {
+            ThemeKind::UfrgsNoite => Self::ufrgs(kind, &NOITE, dark),
+            ThemeKind::UfrgsDia => Self::ufrgs(kind, &DIA, dark),
             ThemeKind::Dark => dark,
             ThemeKind::Medium => Tokens {
                 app_bg: Color32::from_rgb(20, 20, 20),
@@ -333,10 +366,115 @@ impl Tokens {
         }
     }
 
+    /// A Suíte FisiLab theme: every colour role from the brand tones `b` (`fisilab_brand::palette`),
+    /// the layout (radii, gaps, tab height) from the upstream default `layout`. Colours that encode
+    /// data (render bar status) keep their meaning; soft fills are mixes of the brand tones.
+    fn ufrgs(kind: ThemeKind, b: &Tons, layout: Tokens) -> Tokens {
+        // a translucent (premultiplied) brand colour flattened onto an opaque surface
+        let over = |fg: Color32, bg: Color32| {
+            let a = f32::from(fg.a()) / 255.0;
+            let ch = |f: u8, g: u8| (f32::from(f) + f32::from(g) * (1.0 - a)).round().clamp(0.0, 255.0) as u8;
+            Color32::from_rgb(ch(fg.r(), bg.r()), ch(fg.g(), bg.g()), ch(fg.b(), bg.b()))
+        };
+        let dark = b.escuro;
+        let faint = mix(b.texto_fraco, b.painel, 0.35);
+        let well = if dark { b.fundo } else { b.ativo };
+        let plot = if dark { mix(b.fundo, b.painel, 0.5) } else { b.elevado };
+        Tokens {
+            kind,
+            app_bg: b.fundo,
+            header_bg: b.painel,
+            panel_bg: b.painel,
+            tab_bg: b.painel,
+            tab_text: b.texto_fraco,
+            tab_text_active: b.texto,
+            focus: b.foco,
+            accent: b.destaque,
+            accent_hover: b.destaque_hover,
+            text: b.texto,
+            text_dim: b.texto_fraco,
+            text_faint: faint,
+            icon: b.texto_fraco,
+            icon_active: b.texto,
+            hover: b.hover,
+            pressed: b.ativo,
+            field_bg: b.elevado,
+            field_border: b.borda,
+            separator: b.borda,
+            row_alt: mix(b.painel, b.elevado, 0.5),
+            row_selected: over(b.selecao, b.painel),
+            hot_text: b.foco,
+            pill_active_bg: b.ativo,
+            clip_bar_bg: mix(b.ativo, b.foco, 0.12),
+            control_surface: if dark { b.elevado } else { b.hover },
+            control_well: well,
+            control_border: mix(b.borda, b.texto_fraco, 0.35),
+            control_handle_bg: if dark { b.hover } else { b.ativo },
+            control_handle: b.texto,
+            control_handle_dim: b.texto_fraco,
+            plot_bg: plot,
+            plot_grid: mix(plot, b.borda, 0.6),
+            plot_axis: b.borda,
+            plot_handle: b.texto,
+            plot_handle_dim: b.texto_fraco,
+            meter_bg: well,
+            meter_readout_bg: if dark { mix(b.fundo, b.painel, 0.5) } else { b.hover },
+            meter_clip_off: b.borda,
+            panner_bg: well,
+            panner_border: mix(b.borda, b.texto_fraco, 0.5),
+            panner_speaker: b.texto_fraco,
+            fader_knob: mix(b.ativo, b.texto_fraco, 0.4),
+            eq_track: b.borda,
+            eq_tick: faint,
+            eq_knob: b.texto_fraco,
+            eq_knob_active: b.texto,
+            eq_node: b.texto,
+            eq_node_off: faint,
+            crossover_handle: b.texto,
+            keyframe_plot_bg: plot,
+            keyframe_plot_grid: mix(plot, b.borda, 0.6),
+            keyframe_plot_axis: b.borda,
+            keyframe_handle: b.texto,
+            switch_fill: b.texto,
+            switch_knob: b.painel,
+            switch_border: b.texto_fraco,
+            slider_disabled_track: b.borda,
+            slider_disabled_knob: faint,
+            button_hover: b.hover,
+            button_border: b.borda,
+            caption_track_bg: mix(b.painel, b.foco, 0.12),
+            scroll_thumb: mix(b.borda, b.texto_fraco, 0.3),
+            scroll_thumb_hover: b.texto_fraco,
+            vertical_scroll_thumb: mix(b.borda, b.texto_fraco, 0.3),
+            disabled_clip_bg: b.elevado,
+            tl_bg: b.painel,
+            tl_track_bg: b.painel,
+            tl_track_bg_alt: b.painel,
+            tl_header_bg: b.painel,
+            tl_ruler_bg: b.painel,
+            tl_ruler_tick: b.texto_fraco,
+            tl_ruler_text: b.texto_fraco,
+            playhead: b.foco,
+            track_target: if dark { fisilab_brand::palette::AZUL_CTA } else { fisilab_brand::palette::AZUL_CTA_CLARO },
+            in_out_shade: b.ativo,
+            clip_selected_border: b.texto,
+            monitor_bg: b.painel,
+            timecode: b.foco,
+            danger: b.erro,
+            // render bar status colours encode data, and the layout stays upstream's
+            ..layout
+        }
+    }
+
     /// Settings ▸ Appearance on top of a theme: the highlight colour (selections, primary buttons,
     /// the focus outline, the playhead, timecodes, drag values and track targeting) and accessible
     /// colour contrast (brighter secondary text and borders).
+    ///
+    /// Suíte FisiLab: the default highlight ([`filmcraft_engine::settings::DEFAULT_HIGHLIGHT`])
+    /// means "the theme's own", so each theme keeps the accent it was designed with (the brand red
+    /// in the UFRGS themes, blue in the upstream ones); only a colour of the user's own replaces it.
     pub fn with_appearance(mut self, highlight: Option<[u8; 3]>, accessible_contrast: bool) -> Self {
+        let highlight = highlight.filter(|h| Some(*h) != filmcraft_engine::settings::parse_hex(filmcraft_engine::settings::DEFAULT_HIGHLIGHT));
         if let Some([r, g, b]) = highlight {
             let c = Color32::from_rgb(r, g, b);
             // A highlight of the user's own also colours the theme's other blues: the same hue, as
@@ -360,7 +498,13 @@ impl Tokens {
             self.accent_hover = Color32::from_rgb(lift(r), lift(g), lift(b));
         }
         if accessible_contrast {
-            if self.kind == ThemeKind::Light {
+            if let Some(b) = self.kind.brand_tones() {
+                self.text_dim = self.text;
+                self.text_faint = b.texto_fraco;
+                self.tab_text = self.tab_text_active;
+                self.field_border = mix(b.borda, b.texto_fraco, 0.6);
+                self.separator = mix(b.borda, b.texto_fraco, 0.35);
+            } else if self.kind == ThemeKind::Light {
                 self.text_dim = Color32::from_rgb(40, 40, 40);
                 self.text_faint = Color32::from_rgb(80, 80, 80);
                 self.field_border = Color32::from_rgb(110, 110, 110);
@@ -392,6 +536,12 @@ impl Tokens {
     }
 }
 
+/// `a` moved `t` (0-1) of the way towards `b`, channel by channel (opaque colours).
+fn mix(a: Color32, b: Color32, t: f32) -> Color32 {
+    let ch = |x: u8, y: u8| (f32::from(x) + (f32::from(y) - f32::from(x)) * t).round().clamp(0.0, 255.0) as u8;
+    Color32::from_rgb(ch(a.r(), b.r()), ch(a.g(), b.g()), ch(a.b(), b.b()))
+}
+
 /// Menu text: Premiere's menus are the system's, larger and brighter than panel text, one item
 /// every 24 px.
 pub const MENU_TEXT_SIZE: f32 = 13.0;
@@ -403,7 +553,8 @@ pub fn menu_style(s: &mut egui::Style) {
     s.text_styles.insert(TextStyle::Button, FontId::new(MENU_TEXT_SIZE, FontFamily::Proportional));
     s.text_styles.insert(TextStyle::Body, FontId::new(MENU_TEXT_SIZE, FontFamily::Proportional));
     s.spacing.item_spacing.y = 0.0;
-    if s.visuals.dark_mode {
+    // the UFRGS Noite menus keep the theme's cream text
+    if s.visuals.dark_mode && s.visuals.override_text_color != Some(NOITE.texto) {
         s.visuals.override_text_color = Some(MENU_TEXT);
     }
 }
@@ -458,8 +609,8 @@ fn add_craft_fonts(fonts: &mut FontDefinitions) {
 }
 
 pub fn apply_visuals(ctx: &egui::Context, t: &Tokens) {
-    let light = t.kind == ThemeKind::Light;
-    // FilmCraft decides between light and dark itself (Settings ▸ Appearance ▸ Appearance Mode), so
+    let light = t.kind.is_light();
+    // FisiFilme decides between light and dark itself (Settings ▸ Appearance ▸ Appearance Mode), so
     // egui must not switch to its other built-in style when the system appearance changes.
     ctx.set_theme(if light { egui::Theme::Light } else { egui::Theme::Dark });
     let mut v = if light { Visuals::light() } else { Visuals::dark() };
@@ -496,6 +647,18 @@ pub fn apply_visuals(ctx: &egui::Context, t: &Tokens) {
     v.widgets.active.fg_stroke = Stroke::new(1.0, t.tab_text_active);
     v.widgets.open.bg_fill = t.hover;
     v.widgets.open.weak_bg_fill = t.hover;
+    // Suíte FisiLab themes: links in the brand blue, text on the accent in the brand cream,
+    // warnings, errors and shadows from the brand tones
+    if let Some(b) = t.kind.brand_tones() {
+        v.selection.stroke = Stroke::new(1.0, b.texto_destaque);
+        v.hyperlink_color = t.focus;
+        v.warn_fg_color = b.aviso;
+        v.error_fg_color = b.erro;
+        let ink = if b.escuro { b.fundo } else { b.texto };
+        let shadow = Color32::from_rgba_unmultiplied(ink.r(), ink.g(), ink.b(), if b.escuro { 170 } else { 70 });
+        v.popup_shadow.color = shadow;
+        v.window_shadow.color = shadow;
+    }
     ctx.set_visuals(v);
     ctx.global_style_mut(|s| {
         s.spacing.item_spacing = egui::vec2(6.0, 4.0);
@@ -527,8 +690,14 @@ mod tests {
 
     #[test]
     fn light_theme_has_light_chrome_and_plot_surfaces() {
+        for (dark, light) in [(ThemeKind::Dark, ThemeKind::Light), (ThemeKind::UfrgsNoite, ThemeKind::UfrgsDia)] {
+            light_chrome(Tokens::for_kind(dark), Tokens::for_kind(light));
+        }
         let dark = Tokens::for_kind(ThemeKind::Dark);
-        let light = Tokens::for_kind(ThemeKind::Light);
+        assert_eq!(Tokens::for_kind(ThemeKind::Medium).plot_bg, dark.plot_bg, "Medium keeps the established dark plot treatment");
+    }
+
+    fn light_chrome(dark: Tokens, light: Tokens) {
         let luminance = |c: Color32| u16::from(c.r()) + u16::from(c.g()) + u16::from(c.b());
 
         for (name, dark_surface, light_surface) in [
@@ -549,7 +718,60 @@ mod tests {
         assert!(luminance(light.control_handle) < luminance(light.control_handle_bg));
         assert!(luminance(light.plot_handle) < luminance(light.plot_bg));
         assert!(luminance(light.icon_active) < luminance(light.pressed));
-        assert_eq!(Tokens::for_kind(ThemeKind::Medium).plot_bg, dark.plot_bg, "Medium keeps the established dark plot treatment");
+    }
+
+    /// Suíte FisiLab: UFRGS Noite is the default (fresh preferences, unknown names), both UFRGS
+    /// themes come first and round-trip through their preference names and View ▸ Appearance ids.
+    #[test]
+    fn ufrgs_noite_is_the_default_theme() {
+        assert_eq!(ThemeKind::default(), ThemeKind::UfrgsNoite);
+        assert_eq!(&ThemeKind::ALL[..2], &[ThemeKind::UfrgsNoite, ThemeKind::UfrgsDia]);
+        for k in ThemeKind::ALL {
+            assert_eq!(ThemeKind::from_pref(k.pref_name()), k);
+        }
+        assert_eq!(ThemeKind::from_pref("neon"), ThemeKind::UfrgsNoite);
+        assert_eq!(ThemeKind::from_name("ufrgsNoite"), Some(ThemeKind::UfrgsNoite));
+        assert_eq!(ThemeKind::from_name("ufrgsDia"), Some(ThemeKind::UfrgsDia));
+        let prefs = filmcraft_engine::settings::AppearancePrefs::default();
+        assert_eq!(ThemeKind::from_pref(prefs.shown_theme(Some(false))), ThemeKind::UfrgsNoite);
+        assert_eq!(ThemeKind::from_pref(&prefs.light_theme), ThemeKind::UfrgsDia);
+        assert!(!ThemeKind::UfrgsNoite.is_light() && ThemeKind::UfrgsDia.is_light());
+    }
+
+    /// The UFRGS themes take their colours from the brand palette and the layout from upstream's.
+    #[test]
+    fn ufrgs_themes_use_the_brand_palette() {
+        let upstream = Tokens::for_kind(ThemeKind::Dark);
+        for (kind, b) in [(ThemeKind::UfrgsNoite, &NOITE), (ThemeKind::UfrgsDia, &DIA)] {
+            let t = Tokens::for_kind(kind);
+            assert_eq!(t.kind, kind);
+            assert_eq!((t.app_bg, t.panel_bg, t.field_bg, t.hover, t.pressed), (b.fundo, b.painel, b.elevado, b.hover, b.ativo));
+            assert_eq!((t.accent, t.accent_hover, t.focus, t.text, t.text_dim), (b.destaque, b.destaque_hover, b.foco, b.texto, b.texto_fraco));
+            assert_eq!((t.separator, t.danger), (b.borda, b.erro));
+            assert_eq!((t.radius, t.radius_sm, t.gap, t.tab_h), (upstream.radius, upstream.radius_sm, upstream.gap, upstream.tab_h), "layout unchanged");
+            // the default highlight keeps the theme's own colours
+            let default = filmcraft_engine::settings::parse_hex(filmcraft_engine::settings::DEFAULT_HIGHLIGHT);
+            assert_eq!(t.with_appearance(default, false), t);
+            // selections, focus and text on the accent stay readable
+            assert!(contrast(t.text, t.row_selected) >= 4.5, "{kind:?}: text on a selected row");
+            assert!(contrast(t.text, t.field_bg) >= 7.0, "{kind:?}: text in fields");
+            assert!(contrast(t.text_dim, t.panel_bg) >= 3.0, "{kind:?}: dim text");
+            assert!(contrast(b.texto_destaque, t.accent) >= 4.5, "{kind:?}: text on the accent");
+            let a = t.with_appearance(default, true);
+            assert!(contrast(a.text_faint, a.panel_bg) >= 4.5, "{kind:?}: accessible contrast");
+        }
+    }
+
+    fn contrast(a: Color32, b: Color32) -> f32 {
+        let lum = |c: Color32| {
+            let f = |x: u8| {
+                let s = f32::from(x) / 255.0;
+                if s <= 0.03928 { s / 12.92 } else { ((s + 0.055) / 1.055).powf(2.4) }
+            };
+            0.2126 * f(c.r()) + 0.7152 * f(c.g()) + 0.0722 * f(c.b())
+        };
+        let (x, y) = (lum(a), lum(b));
+        (x.max(y) + 0.05) / (x.min(y) + 0.05)
     }
 
     #[test]
@@ -580,7 +802,7 @@ mod tests {
     #[test]
     fn the_default_highlight_leaves_the_theme_blues_as_designed() {
         let default = filmcraft_engine::settings::parse_hex(filmcraft_engine::settings::DEFAULT_HIGHLIGHT);
-        for k in [ThemeKind::Dark, ThemeKind::Medium, ThemeKind::Light] {
+        for k in ThemeKind::ALL {
             assert_eq!(highlight_blues(&Tokens::for_kind(k).with_appearance(default, false)), highlight_blues(&Tokens::for_kind(k)), "{k:?}");
         }
     }
@@ -612,7 +834,7 @@ mod tests {
             return;
         }
         let ctx = egui::Context::default();
-        for kind in [ThemeKind::Dark, ThemeKind::Medium, ThemeKind::Light] {
+        for kind in ThemeKind::ALL {
             install(&ctx, &Tokens::for_kind(kind));
             ctx.run_ui(egui::RawInput::default(), |_| {}).textures_delta.clear();
             ctx.fonts_mut(|fonts| {

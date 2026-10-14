@@ -102,7 +102,10 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     uic!("multicam.editCamerasDialog", "Edit Cameras…", [], None),
     uic!("voiceover.recordToggle", "Voice-over Record", [], None),
     uic!("voiceover.settingsDialog", "Voice-Over Record Settings…", [], None),
-    // ids follow `ThemeKind`, labels follow Settings ▸ Appearance ▸ Color Theme (`darkest`, `dark`, `light`)
+    // ids follow `ThemeKind`, labels follow Settings ▸ Appearance ▸ Color Theme (`ufrgsNoite`,
+    // `ufrgsDia`, `darkest`, `dark`, `light`); the Suíte FisiLab themes come first
+    uic!("view.theme.ufrgsNoite", "UFRGS Noite", ["View", "Appearance"], None),
+    uic!("view.theme.ufrgsDia", "UFRGS Dia", ["View", "Appearance"], None),
     uic!("view.theme.dark", "Darkest", ["View", "Appearance"], None),
     uic!("view.theme.medium", "Dark", ["View", "Appearance"], None),
     uic!("view.theme.light", "Light", ["View", "Appearance"], None),
@@ -136,14 +139,16 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     uic!("mode.import", "Import", [], None),
     uic!("mode.edit", "Edit", [], None),
     uic!("mode.export", "Export", ["File", "Export"], Some("Cmd+M")),
-    uic!("help.discord", "Join the ArtCraft Discord…", ["Help"], None),
-    uic!("help.website", "ArtCraft Website", ["Help"], None),
-    uic!("help.appPage", "FilmCraft on getartcraft.com", ["Help"], None),
-    uic!("help.github", "FilmCraft on GitHub", ["Help"], None),
-    uic!("help.reportIssue", "Report an Issue…", ["Help"], None),
+    // Suíte FisiLab: the links of `crate::links::ALL` (labels must match) and the suite's About
+    // window (label = `fisilab_brand::ABOUT_MENU_LABEL`; `uic!` needs a literal).
+    uic!("help.suite", "Site da Suíte FisiLab", ["Help"], None),
+    uic!("help.manifesto", "Manifesto pelas tecnologias livres", ["Help"], None),
+    uic!("help.upstream", "Projeto original (FilmCraft)", ["Help"], None),
+    uic!("help.reportIssue", "Reportar um problema", ["Help"], None),
     uic!("help.revealLogFiles", "Reveal Log Files…", ["Help"], None),
     uic!("help.systemCompatibilityReport", "System Compatibility Report…", ["Help"], None),
-    uic!("app.about", "About FilmCraft", ["Help"], None),
+    uic!("app.about", "About FisiFilme", ["Help"], None),
+    uic!("help.fisilab", "Sobre a Suíte FisiLab…", ["Help"], None),
     uic!("app.keyboardShortcuts", "Keyboard Shortcuts…", ["Edit"], Some("Cmd+Alt+K")),
     uic!("app.settings.general", "General…", ["Edit", "Preferences"], Some("Cmd+,")),
     uic!("app.settings.appearance", "Appearance…", ["Edit", "Preferences"], None),
@@ -433,6 +438,10 @@ pub fn invoke(app: &mut FilmcraftApp, ctx: &egui::Context, id: &str, mut params:
             app.dialog = Some(crate::Dialog::About);
             return Ok(Value::Null);
         }
+        "help.fisilab" => {
+            fisilab_brand::about::open(ctx);
+            return Ok(Value::Null);
+        }
         id if crate::links::url_for(id).is_some() => {
             let url = crate::links::url_for(id).unwrap_or_default();
             crate::links::open(app, ctx, url);
@@ -678,7 +687,7 @@ pub const MENUS: [&str; 9] = ["File", "Edit", "Clip", "Sequence", "Markers", "Gr
 /// Labels only the native macOS app menu shows, with no command in the menu tree behind them: the
 /// Settings submenu and the predefined Hide, Hide Others and Quit items. They are translated through
 /// the catalogs like menu labels (`apps/filmcraft/src/native_menu.rs`).
-pub const NATIVE_APP_MENU: [&str; 4] = ["Settings", "Hide FilmCraft", "Hide Others", "Quit FilmCraft"];
+pub const NATIVE_APP_MENU: [&str; 4] = ["Settings", "Hide FisiFilme", "Hide Others", "Quit FisiFilme"];
 
 pub fn menu_items(app: &FilmcraftApp) -> Vec<MenuItem> {
     let mut v = menu_items_for(&app.session);
@@ -1081,6 +1090,25 @@ mod tests {
         let reset = ws.iter().position(|it| it.id == "window.workspace.reset");
         assert!(matches!((editing, reset), (Some(e), Some(r)) if e < r), "workspaces come before the layout commands");
         assert!(items.iter().any(|it| it.id == "file.save" && it.path == ["File"]));
+    }
+
+    /// Suíte FisiLab: Help lists the suite's About window under the brand crate's label, and every
+    /// link of `links::ALL` under its own label; invoking `help.fisilab` opens that window.
+    #[test]
+    fn help_menu_has_the_fisilab_about_window_and_links() {
+        let items = default_menu_items();
+        let label = |id: &str| items.iter().find(|it| it.id == id && it.path == ["Help"]).map(|it| it.label.clone());
+        assert_eq!(label("help.fisilab").as_deref(), Some(fisilab_brand::ABOUT_MENU_LABEL));
+        assert_eq!(label("app.about").as_deref(), Some("About FisiFilme"));
+        for (id, l, _) in crate::links::ALL {
+            assert_eq!(label(id).as_deref(), Some(l), "{id}");
+        }
+        assert!(items.iter().all(|it| !it.label.contains("ArtCraft") && !it.label.contains("Discord")), "no upstream community items");
+        let mut app = FilmcraftApp::new(filmcraft_engine::Session::default());
+        let ctx = egui::Context::default();
+        assert!(!fisilab_brand::about::is_open(&ctx));
+        invoke(&mut app, &ctx, "help.fisilab", json!({})).unwrap();
+        assert!(fisilab_brand::about::is_open(&ctx));
     }
 
     /// #1500: like a native menu bar, while one menu is open hovering another title opens it.

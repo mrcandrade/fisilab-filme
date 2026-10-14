@@ -1,4 +1,4 @@
-//! The FilmCraft egui frontend.
+//! The FisiFilme egui frontend (Suíte FisiLab; based on the FilmCraft frontend).
 //!
 //! Thin by design: all project changes go through `filmcraft_engine::Session::execute`; this crate
 //! owns only presentation state ([`state::UiState`]), GPU textures, the playback clock and the
@@ -30,7 +30,6 @@ macro_rules! tlf {
 }
 
 pub mod automation;
-pub mod brand;
 pub mod calc;
 mod cjk;
 pub mod control;
@@ -75,6 +74,18 @@ use frames::{FrameKey, FrameServer, Target};
 use native_dialogs::FileDialog;
 use state::UiState;
 use theme::{ThemeKind, Tokens};
+
+/// What FisiFilme tells the Suíte FisiLab brand (`fisilab_brand`): the About window and the
+/// opening animation read it.
+pub const APP_INFO: fisilab_brand::AppInfo = fisilab_brand::AppInfo {
+    name: "FisiFilme",
+    tagline: "Editor de vídeo",
+    equivalent: "Adobe Premiere Pro",
+    version: env!("CARGO_PKG_VERSION"),
+    upstream_name: "FilmCraft",
+    upstream_url: "https://github.com/storytold/filmcraft",
+    upstream_copyright: "© 2026 ArtCraft Team e contribuidores do FilmCraft",
+};
 
 /// Audio output provided by the platform layer (cpal on desktop, WebAudio on web).
 pub trait AudioOut {
@@ -268,7 +279,7 @@ pub(crate) const EXPORT_SAVE_DIALOGS: [(&str, &str, &str); 7] = [
     ("file.exportFcpxml", "FCPXML", "fcpxml"),
     ("file.exportOtio", "OpenTimelineIO", "otio"),
     ("file.exportAle", "Avid Log Exchange", "ale"),
-    ("file.exportSelectionProject", "FilmCraft Project", "fcproj"),
+    ("file.exportSelectionProject", "FisiFilme Project", "fcproj"),
 ];
 
 pub struct FilmcraftApp {
@@ -540,7 +551,7 @@ impl FilmcraftApp {
         Self {
             session,
             ui: UiState { language, ..UiState::default() },
-            tokens: Tokens::for_kind(ThemeKind::Dark),
+            tokens: Tokens::for_kind(ThemeKind::default()),
             frames,
             playback: Playback { speed: 1.0, ..Default::default() },
             source_playback: Default::default(),
@@ -646,7 +657,7 @@ impl FilmcraftApp {
         self.tokens = Tokens::for_kind(k).with_appearance(highlight, a.accessible_contrast);
         theme::apply_visuals(ctx, &self.tokens);
         self.apply_tooltips(ctx);
-        self.ui.dark = k != ThemeKind::Light;
+        self.ui.dark = !k.is_light();
     }
 
     /// The system appearance: the host's reading, else what the windowing toolkit reports.
@@ -1933,8 +1944,8 @@ impl FilmcraftApp {
     fn error_window(&mut self, ctx: &egui::Context) {
         let Some(msg) = self.ui_error.clone() else { return };
         let mut close = false;
-        egui::Window::new(tl!("FilmCraft hit an error"))
-            .id(egui::Id::new("FilmCraft hit an error"))
+        egui::Window::new(tl!("FisiFilme hit an error"))
+            .id(egui::Id::new("FisiFilme hit an error"))
             .collapsible(false)
             .resizable(false)
             .pivot(egui::Align2::CENTER_CENTER)
@@ -2116,6 +2127,12 @@ impl eframe::App for FilmcraftApp {
         if std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| graphics_notice::show(self, ui.ctx()))).is_err() {
             // a broken notice must not take the session down: drop it
             self.graphics_notice = None;
+        }
+        // Suíte FisiLab: the suite's About window (when open) and the CTA opening animation (first
+        // seconds, desktop only: `fisilab_brand::splash::enable` in main) over everything, every
+        // frame once the fonts are in.
+        if std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| fisilab_brand::frame(ui.ctx(), &APP_INFO))).is_err() {
+            log::warn!("the Suíte FisiLab window failed to draw");
         }
         let ctx = ui.ctx().clone();
         self.last_ui_time = ctx.input(|i| i.time);

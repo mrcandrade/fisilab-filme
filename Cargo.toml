@@ -61,6 +61,8 @@ filmcraft-ui-egui = { path = "crates/ui-egui" }
 filmcraft-automation = { path = "crates/automation" }
 filmcraft-platform = { path = "crates/platform" }
 filmcraft-testkit = { path = "crates/testkit" }
+# Suíte FisiLab: shared brand (palette, CTA splash, About window)
+fisilab-brand = { path = "crates/fisilab-brand" }
 
 # foundation
 thiserror = "2"

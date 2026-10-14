@@ -56,13 +56,17 @@ fn interface_language_persists_and_rejects_hostile_values() {
     std::fs::remove_dir_all(dir).unwrap();
 }
 
-/// A new installation follows the operating system's language (#218); a saved choice is kept.
+/// Suíte FisiLab: a new installation (no preferences file yet) starts in Brazilian Portuguese; a
+/// saved choice is kept, including "System Language" (#218), which a file without the key gets.
 #[test]
-fn interface_language_defaults_to_the_system_language() {
+fn interface_language_defaults_to_brazilian_portuguese_on_a_fresh_install() {
     assert_eq!(Preferences::default().general.interface_language, "system");
+    assert_eq!(settings::FRESH_INSTALL_LANGUAGE, "pt-br");
     let dir = tmp_dir("interface-language-default");
     let path = dir.join("preferences.json");
-    assert_eq!(Preferences::load(&path).general.interface_language, "system", "no preferences file yet");
+    assert_eq!(Preferences::load(&path).general.interface_language, "pt-br", "no preferences file yet");
+    std::fs::write(&path, r#"{"general":{"interfaceLanguage":"system"}}"#).unwrap();
+    assert_eq!(Preferences::load(&path).general.interface_language, "system");
     std::fs::write(&path, r#"{"general":{"interfaceLanguage":"en"}}"#).unwrap();
     assert_eq!(Preferences::load(&path).general.interface_language, "en");
     std::fs::remove_dir_all(dir).unwrap();
@@ -625,16 +629,22 @@ fn drop_import_to_timeline_is_in_the_settings_registry() {
     assert_eq!(settings::field("timeline.dropImportToTimeline").map(|f| f.key), Some("timeline.dropImportToTimeline"));
 }
 
-/// New users keep the dark Darkest theme (following the system is opt-in); a file saved before
+/// New users get the dark UFRGS Noite theme (Suíte FisiLab; following the system is opt-in); a file saved before
 /// appearance modes keeps showing its Color Theme as a fixed Dark or Light mode.
 #[test]
 fn appearance_defaults_and_legacy_theme_migrate() {
     let a = Preferences::default().appearance;
-    assert_eq!((a.appearance_mode.as_str(), a.dark_theme.as_str(), a.light_theme.as_str()), ("dark", "darkest", "light"));
-    assert_eq!(a.shown_theme(Some(true)), "darkest", "Dark mode ignores a light system");
+    assert_eq!((a.appearance_mode.as_str(), a.dark_theme.as_str(), a.light_theme.as_str()), ("dark", "ufrgsNoite", "ufrgsDia"));
+    assert_eq!(a.shown_theme(Some(true)), "ufrgsNoite", "Dark mode ignores a light system");
     let dir = tmp_dir("prefs-appearance-migrate");
     let path = dir.join("preferences.json");
-    for (theme, mode, dark, light) in [("darkest", "dark", "darkest", "light"), ("dark", "dark", "dark", "light"), ("light", "light", "darkest", "light")] {
+    for (theme, mode, dark, light) in [
+        ("darkest", "dark", "darkest", "ufrgsDia"),
+        ("dark", "dark", "dark", "ufrgsDia"),
+        ("light", "light", "ufrgsNoite", "light"),
+        ("ufrgsDia", "light", "ufrgsNoite", "ufrgsDia"),
+        ("ufrgsNoite", "dark", "ufrgsNoite", "ufrgsDia"),
+    ] {
         std::fs::write(&path, json!({"version": 2, "appearance": {"colorTheme": theme}}).to_string()).unwrap();
         let a = Preferences::load(&path).appearance;
         assert_eq!((a.appearance_mode.as_str(), a.dark_theme.as_str(), a.light_theme.as_str()), (mode, dark, light), "{theme}");

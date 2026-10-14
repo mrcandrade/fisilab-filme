@@ -466,7 +466,15 @@ impl Preferences {
         Ok(())
     }
 
+    /// The preferences in `path`. Suíte FisiLab: a fresh install (no file yet) starts with the
+    /// interface in [`settings::FRESH_INSTALL_LANGUAGE`] (Brazilian Portuguese); once saved, the
+    /// user's choice (another language, or System Language) is what loads.
     pub fn load(path: &Path) -> Self {
+        if !path.exists() {
+            let mut p = Self::default();
+            p.general.interface_language = settings::FRESH_INSTALL_LANGUAGE.into();
+            return p;
+        }
         fs::read(path).ok().and_then(|b| serde_json::from_slice::<Value>(&b).ok()).map(Self::from_value).unwrap_or_default()
     }
 
@@ -489,8 +497,9 @@ pub fn portable_data_dir(exe_dir: &Path) -> Option<PathBuf> {
 
 /// The data directory. `FILMCRAFT_DATA_DIR` overrides; a portable install ([`PORTABLE_MARKER`] next
 /// to the executable) uses `<exe dir>/data`; otherwise the per-user directory:
-/// macOS `~/Library/Application Support/FilmCraft`, Windows `%APPDATA%\FilmCraft`,
-/// elsewhere `$XDG_DATA_HOME/filmcraft` or `~/.local/share/filmcraft`.
+/// macOS `~/Library/Application Support/FisiFilme`, Windows `%APPDATA%\FisiFilme`,
+/// elsewhere `$XDG_DATA_HOME/fisifilme` or `~/.local/share/fisifilme` (Suíte FisiLab: its own
+/// folders, so an upstream FilmCraft install keeps its data).
 pub fn default_data_dir() -> Option<PathBuf> {
     let env = |k: &str| std::env::var_os(k).filter(|v| !v.is_empty()).map(PathBuf::from);
     if let Some(d) = env("FILMCRAFT_DATA_DIR") {
@@ -500,12 +509,12 @@ pub fn default_data_dir() -> Option<PathBuf> {
         return Some(d);
     }
     if cfg!(target_os = "macos") {
-        return env("HOME").map(|h| h.join("Library/Application Support/FilmCraft"));
+        return env("HOME").map(|h| h.join("Library/Application Support/FisiFilme"));
     }
     if cfg!(windows) {
-        return env("APPDATA").map(|h| h.join("FilmCraft"));
+        return env("APPDATA").map(|h| h.join("FisiFilme"));
     }
-    env("XDG_DATA_HOME").map(|d| d.join("filmcraft")).or_else(|| env("HOME").map(|h| h.join(".local/share/filmcraft")))
+    env("XDG_DATA_HOME").map(|d| d.join("fisifilme")).or_else(|| env("HOME").map(|h| h.join(".local/share/fisifilme")))
 }
 
 pub fn unix_now() -> i64 {
