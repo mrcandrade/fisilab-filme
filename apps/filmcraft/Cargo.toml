@@ -1,15 +1,15 @@
 [package]
 name = "filmcraft"
-description = "FisiFilme desktop app (Suíte FisiLab; based on FilmCraft)"
+description = "Filme desktop app (Suíte FisiLab; based on FilmCraft)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-default-run = "fisifilme"
+default-run = "fisilab-filme"
 build = "build.rs"
 
-# Suíte FisiLab: the GUI executable is fisifilme(.exe); the package name stays `filmcraft`.
+# Suíte FisiLab: the GUI executable is fisilab-filme(.exe); the package name stays `filmcraft`.
 [[bin]]
-name = "fisifilme"
+name = "fisilab-filme"
 path = "src/main.rs"
 
 [lints]

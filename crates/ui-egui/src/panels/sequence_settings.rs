@@ -35,8 +35,8 @@ use crate::FilmcraftApp;
 use crate::i18n::t;
 use crate::state::SequenceSettingsDraft;
 
-const NOT_YET: &str = "Not supported in FisiFilme yet";
-const LINEAR: &str = "FisiFilme always composites in linear light";
+const NOT_YET: &str = "Not supported in Filme yet";
+const LINEAR: &str = "Filme always composites in linear light";
 
 /// The Timebase list (frames per second as num/den), Premiere's common rates.
 const TIMEBASES: [(i64, i64); 15] = [

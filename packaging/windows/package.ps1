@@ -1,11 +1,11 @@
 <#
 .SYNOPSIS
-  Build, sign and package FisiFilme (Suíte FisiLab; based on FilmCraft) for Windows.
+  Build, sign and package Filme (Suíte FisiLab; based on FilmCraft) for Windows.
 
 .DESCRIPTION
   Produces, in $env:DIST (default: dist/release):
-    fisifilme-<version>-windows-<arch>.msi            per-machine installer (WiX v5)
-    fisifilme-<version>-windows-<arch>-portable.zip   fisifilme.exe + fisifilme-cli.exe + portable.txt
+    fisilab-filme-<version>-windows-<arch>.msi            per-machine installer (WiX v5)
+    fisilab-filme-<version>-windows-<arch>-portable.zip   fisilab-filme.exe + fisilab-filme-cli.exe + portable.txt
 
   The binaries link the C runtime statically (+crt-static), so neither the MSI nor the portable
   zip needs the Visual C++ redistributable. Signing is delegated to sign.ps1 (skipped with a
@@ -53,7 +53,7 @@ New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 if (-not $env:FILMCRAFT_BUILD_SHA) { $env:FILMCRAFT_BUILD_SHA = (git -C $Root rev-parse HEAD 2>$null) }
 if (-not $env:FILMCRAFT_BUILD_DATE) { $env:FILMCRAFT_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') }
 
-Write-Output "FisiFilme $Version for Windows $Arch ($Target)"
+Write-Output "Filme $Version for Windows $Arch ($Target)"
 
 if (-not $SkipBuild) {
   # Static CRT: no VC++ redistributable needed. Scoped to the target so host build scripts and
@@ -77,7 +77,7 @@ function Get-PeHeader([string] $Path) {
   return @{ Machine = [BitConverter]::ToUInt16($bytes, $pe + 4); Subsystem = [BitConverter]::ToUInt16($bytes, $pe + 0x5C) }
 }
 $Machine = switch ($Arch) { 'x64' { 0x8664 } 'x86' { 0x14C } 'arm64' { 0xAA64 } }
-foreach ($check in @(@('fisifilme.exe', 2), @('fisifilme-cli.exe', 3))) {
+foreach ($check in @(@('fisilab-filme.exe', 2), @('fisilab-filme-cli.exe', 3))) {
   $h = Get-PeHeader (Join-Path $Bin $check[0])
   if ($h.Machine -ne $Machine) { throw "$($check[0]) is for machine 0x$('{0:X}' -f $h.Machine), expected 0x$('{0:X}' -f $Machine) ($Arch)" }
   if ($h.Subsystem -ne $check[1]) { throw "$($check[0]) has PE subsystem $($h.Subsystem), expected $($check[1])" }
@@ -86,15 +86,15 @@ foreach ($check in @(@('fisifilme.exe', 2), @('fisifilme-cli.exe', 3))) {
 $Stage = Join-Path $TargetDir "windows-package\$Arch"
 Remove-Item -Recurse -Force $Stage -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Stage | Out-Null
-Copy-Item (Join-Path $Bin 'fisifilme.exe'), (Join-Path $Bin 'fisifilme-cli.exe') $Stage
+Copy-Item (Join-Path $Bin 'fisilab-filme.exe'), (Join-Path $Bin 'fisilab-filme-cli.exe') $Stage
 
-& (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage 'fisifilme.exe') (Join-Path $Stage 'fisifilme-cli.exe')
+& (Join-Path $PSScriptRoot 'sign.ps1') (Join-Path $Stage 'fisilab-filme.exe') (Join-Path $Stage 'fisilab-filme-cli.exe')
 
 # ---- MSI ---------------------------------------------------------------------------------------
-$Msi = Join-Path $Dist "fisifilme-$Version-windows-$Arch.msi"
+$Msi = Join-Path $Dist "fisilab-filme-$Version-windows-$Arch.msi"
 Invoke-Native 'wix build' {
   wix build (Join-Path $PSScriptRoot 'filmcraft.wxs') -arch $Arch `
-    -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\fisilab\fisifilme.ico')" `
+    -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\fisilab\fisilab-filme.ico')" `
     -o $Msi
 }
 # wix writes its debug symbols (.wixpdb) next to the MSI; keep them out of the release assets.
@@ -102,14 +102,14 @@ Remove-Item -Force -ErrorAction SilentlyContinue ([IO.Path]::ChangeExtension($Ms
 & (Join-Path $PSScriptRoot 'sign.ps1') $Msi
 
 # ---- portable zip ------------------------------------------------------------------------------
-$Portable = Join-Path $TargetDir "windows-package\fisifilme-$Version-windows-$Arch-portable"
+$Portable = Join-Path $TargetDir "windows-package\fisilab-filme-$Version-windows-$Arch-portable"
 Remove-Item -Recurse -Force $Portable -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Portable | Out-Null
 Copy-Item (Join-Path $Stage '*.exe') $Portable
-# The marker that makes FisiFilme keep its data in .\data next to the exe instead of %APPDATA% (#139).
+# The marker that makes Filme keep its data in .\data next to the exe instead of %APPDATA% (#139).
 Set-Content -Encoding ascii -Path (Join-Path $Portable 'portable.txt') -Value @(
-  'FisiFilme portatil: preferencias, predefinicoes, registros e recuperacao ficam na pasta data',
-  'ao lado de fisifilme.exe. Apague este arquivo para usar %APPDATA%\FisiFilme.'
+  'Filme portatil: preferencias, predefinicoes, registros e recuperacao ficam na pasta data',
+  'ao lado de fisilab-filme.exe. Apague este arquivo para usar %APPDATA%\FisiLab Filme.'
 )
 foreach ($f in 'README.md', 'LICENSE', 'LICENSE-MIT', 'LICENSE-APACHE') {
   $p = Join-Path $Root $f
@@ -121,7 +121,7 @@ if ($env:CRAFT_FONTS_DIR) {
     Copy-Item $lic.FullName (Join-Path $Portable "OFL-$($lic.Directory.Name).txt")
   }
 }
-$Zip = Join-Path $Dist "fisifilme-$Version-windows-$Arch-portable.zip"
+$Zip = Join-Path $Dist "fisilab-filme-$Version-windows-$Arch-portable.zip"
 Remove-Item -Force $Zip -ErrorAction SilentlyContinue
 Compress-Archive -Path $Portable -DestinationPath $Zip
 
@@ -129,8 +129,8 @@ Compress-Archive -Path $Portable -DestinationPath $Zip
 # here; .github/workflows/windows-arm64.yml installs and runs it on ARM64 instead.
 $HostArch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString().ToLowerInvariant()
 if ($Arch -ne 'arm64' -or $HostArch -eq 'arm64') {
-  Invoke-Native 'fisifilme-cli --version' { & (Join-Path $Stage 'fisifilme-cli.exe') --version }
+  Invoke-Native 'fisilab-filme-cli --version' { & (Join-Path $Stage 'fisilab-filme-cli.exe') --version }
 } else {
-  Write-Output "skipping fisifilme-cli --version: an $Arch build doesn't run on this $HostArch machine"
+  Write-Output "skipping fisilab-filme-cli --version: an $Arch build doesn't run on this $HostArch machine"
 }
 Get-Item $Msi, $Zip | Format-Table Name, Length

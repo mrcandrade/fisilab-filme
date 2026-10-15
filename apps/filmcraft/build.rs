@@ -1,4 +1,4 @@
-//! Windows only: embed the app icon and version info (VERSIONINFO) into `fisifilme.exe`, so it
+//! Windows only: embed the app icon and version info (VERSIONINFO) into `fisilab-filme.exe`, so it
 //! shows in Explorer, the taskbar, the Start menu and Alt-Tab.
 //!
 //! On every other target this does nothing (`winresource` is only a build-dependency on Windows
@@ -7,7 +7,7 @@
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
-    println!("cargo:rerun-if-changed=../../assets/fisilab/fisifilme.ico");
+    println!("cargo:rerun-if-changed=../../assets/fisilab/fisilab-filme.ico");
     println!("cargo:rerun-if-env-changed=FILMCRAFT_REQUIRE_WINRES");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() != Ok("windows") {
         return;
@@ -19,18 +19,18 @@ fn main() {
 mod windows {
     pub fn embed_resources() {
         let mut res = winresource::WindowsResource::new();
-        res.set_icon("../../assets/fisilab/fisifilme.ico")
-            .set("ProductName", "FisiFilme")
-            .set("FileDescription", "FisiFilme — Editor de vídeo (Suíte FisiLab)")
+        res.set_icon("../../assets/fisilab/fisilab-filme.ico")
+            .set("ProductName", "Filme")
+            .set("FileDescription", "Filme — Editor de vídeo (Suíte FisiLab)")
             .set("CompanyName", "FisiLab — LARFIC/UFRGS")
             .set("LegalCopyright", "Baseado no FilmCraft (© ArtCraft Team e contribuidores). Modificações © 2026 FisiLab — LARFIC/UFRGS. MIT OR Apache-2.0.")
-            .set("OriginalFilename", "fisifilme.exe")
-            .set("InternalName", "fisifilme");
+            .set("OriginalFilename", "fisilab-filme.exe")
+            .set("InternalName", "fisilab-filme");
         if let Err(e) = res.compile() {
             if std::env::var_os("FILMCRAFT_REQUIRE_WINRES").is_some() {
                 panic!("embedding Windows resources failed: {e}");
             }
-            println!("cargo:warning=fisifilme.exe built without icon/version resources: {e}");
+            println!("cargo:warning=fisilab-filme.exe built without icon/version resources: {e}");
         }
     }
 }
@@ -39,6 +39,6 @@ mod windows {
 #[cfg(not(windows))]
 mod windows {
     pub fn embed_resources() {
-        println!("cargo:warning=fisifilme.exe built without icon/version resources (cross-compiled from a non-Windows host)");
+        println!("cargo:warning=fisilab-filme.exe built without icon/version resources (cross-compiled from a non-Windows host)");
     }
 }

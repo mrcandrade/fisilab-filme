@@ -133,7 +133,7 @@ pub fn open_path(app: &mut FilmcraftApp, ctx: &egui::Context, path: &str, reveal
 
 /// Where Reveal Log Files points: `<data dir>/Logs` (the temp folder without a data directory).
 pub fn logs_dir(app: &FilmcraftApp) -> std::path::PathBuf {
-    app.session.prefs_path.as_ref().and_then(|p| p.parent()).map(|d| d.join("Logs")).unwrap_or_else(|| filmcraft_engine::temp_dir().join("FisiFilme Logs"))
+    app.session.prefs_path.as_ref().and_then(|p| p.parent()).map(|d| d.join("Logs")).unwrap_or_else(|| filmcraft_engine::temp_dir().join("FisiLab Filme Logs"))
 }
 
 /// Write this session's log (system report and the command journal) into [`logs_dir`].
@@ -215,7 +215,7 @@ pub fn route(app: &mut FilmcraftApp, ctx: &egui::Context, id: &str, params: &Val
             let (filter, ext, name) = if id == "file.exportAle" {
                 (tl!("Avid Log Exchange"), "ale", format!("{}.ale", app.session.project.name))
             } else {
-                (tl!("FisiFilme Project"), "fcproj", tlf!("{name} Selection.fcproj", name = app.session.project.name))
+                (tl!("FisiLab Filme Project"), "fcproj", tlf!("{name} Selection.fcproj", name = app.session.project.name))
             };
             let mut p = params.clone();
             if !p.is_object() {
@@ -596,7 +596,7 @@ pub fn show(app: &mut FilmcraftApp, ctx: &egui::Context) {
                         ui.label(RichText::new(tl!("Video Rendering and Playback")).strong());
                         // the stored values keep the upstream names (project files stay compatible);
                         // the labels show this app's name
-                        let shown = |r: &str| r.replace("FilmCraft", "FisiFilme");
+                        let shown = |r: &str| r.replace("FilmCraft", "FisiLab Filme");
                         let rs = vec![
                             (filmcraft_engine::project_tools::RENDERER_GPU.to_string(), shown(filmcraft_engine::project_tools::RENDERER_GPU)),
                             (filmcraft_engine::project_tools::RENDERER_SOFTWARE.to_string(), shown(filmcraft_engine::project_tools::RENDERER_SOFTWARE)),

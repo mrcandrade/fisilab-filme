@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/fisilab/fisifilme-256.png" alt="Ícone do FisiFilme" width="128">
+  <img src="assets/fisilab/fisilab-filme-256.png" alt="Ícone do Filme" width="128">
 </p>
 
-<h1 align="center">FisiFilme</h1>
+<h1 align="center">Filme · Suíte FisiLab</h1>
 
 <p align="center"><b>Editor de vídeo</b></p>
 
@@ -39,27 +39,27 @@
 
 ### Windows
 
-Baixe o instalador `FisiFilme-Setup-<versão>.exe` no portal de downloads da
+Baixe o instalador `FisiLab-Filme-Setup-<versão>.exe` no portal de downloads da
 [Suíte FisiLab](https://github.com/mrcandrade/larfic/tree/main/suite-fisilab) ou nas
-[Releases do GitHub](https://github.com/mrcandrade/fisifilme/releases) e execute-o.
+[Releases do GitHub](https://github.com/mrcandrade/fisilab-filme/releases) e execute-o.
 
 ### Compilar a partir do código
 
 É preciso ter o [Rust](https://rustup.rs) instalado (no Windows, com as Build Tools do MSVC).
 
 ```sh
-git clone https://github.com/mrcandrade/fisifilme
-cd fisifilme
-cargo run --release -p filmcraft                     # o aplicativo (fisifilme), com um projeto de demonstração
-cargo run --release -p filmcraft-cli -- commands     # a linha de comando (fisifilme-cli)
+git clone https://github.com/mrcandrade/fisilab-filme
+cd fisilab-filme
+cargo run --release -p filmcraft                     # o aplicativo (fisilab-filme), com um projeto de demonstração
+cargo run --release -p filmcraft-cli -- commands     # a linha de comando (fisilab-filme-cli)
 ```
 
-Os executáveis gerados ficam em `target/release/fisifilme(.exe)` e
-`target/release/fisifilme-cli(.exe)`.
+Os executáveis gerados ficam em `target/release/fisilab-filme(.exe)` e
+`target/release/fisilab-filme-cli(.exe)`.
 
 ## Créditos
 
-O FisiFilme é uma versão modificada do [FilmCraft](https://github.com/storytold/filmcraft), criado
+O Filme é uma versão modificada do [FilmCraft](https://github.com/storytold/filmcraft), criado
 pelo ArtCraft Team e contribuidores. Todo o trabalho de edição, codecs, formatos e ferramentas vem
 do projeto original. O código é distribuído sob a licença MIT ou Apache 2.0, à sua escolha
 ([LICENSE-MIT](LICENSE-MIT), [LICENSE-APACHE](LICENSE-APACHE)). Veja também [NOTICE](NOTICE),

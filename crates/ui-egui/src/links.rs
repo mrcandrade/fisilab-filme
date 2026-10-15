@@ -1,22 +1,22 @@
 //! Community and project links (Help menu, About dialog, header Suíte FisiLab button, Home
 //! screen).
 //!
-//! FisiFilme is part of the Suíte FisiLab (FisiLab — LARFIC · UFRGS, with the CTA — Centro de
+//! Filme is part of the Suíte FisiLab (FisiLab — LARFIC · UFRGS, with the CTA — Centro de
 //! Tecnologia Acadêmica). Its links point at the suite, the free-technology manifesto, the
 //! upstream project it is based on (FilmCraft) and this fork's issue tracker. Nothing points at
 //! the upstream community or website.
 
 /// The app's short name, used in the repository URLs.
-pub const APP: &str = "fisifilme";
+pub const APP: &str = "fisilab-filme";
 
 /// The Suíte FisiLab page (source, installers, credits).
 pub const SUITE: &str = fisilab_brand::SUITE_URL;
 /// The manifesto for free technologies.
 pub const MANIFESTO: &str = fisilab_brand::MANIFESTO_URL;
-/// The upstream project FisiFilme is based on (FilmCraft, by the ArtCraft Team and contributors).
+/// The upstream project Filme is based on (FilmCraft, by the ArtCraft Team and contributors).
 pub const UPSTREAM: &str = "https://github.com/storytold/filmcraft";
-/// New issue on FisiFilme's repository.
-pub const ISSUES: &str = "https://github.com/mrcandrade/fisifilme/issues";
+/// New issue on Filme's repository.
+pub const ISSUES: &str = "https://github.com/mrcandrade/fisilab-filme/issues";
 
 /// (command id, label, url) for every link, in menu order.
 pub const ALL: [(&str, &str, &str); 4] = [
@@ -39,7 +39,7 @@ pub fn url_for(command: &str) -> Option<&'static str> {
 }
 
 /// What a Help menu item does, shown when the pointer rests on it: the address a link opens in
-/// the web browser, or that the item stays inside FisiFilme.
+/// the web browser, or that the item stays inside Filme.
 pub fn menu_hint(command: &str) -> Option<String> {
     let url = if command == "help.filmcraftHelp" { Some(crate::panels::keyboard::HELP_URL) } else { url_for(command) };
     if let Some(url) = url {
@@ -49,7 +49,7 @@ pub fn menu_hint(command: &str) -> Option<String> {
         match command {
             "help.revealLogFiles" => tl!("Saves this session's log and shows it in your file manager."),
             "help.systemCompatibilityReport" => tl!("Shows a report on this computer."),
-            "app.about" => tl!("Shows the version, community links and credits in a FisiFilme window."),
+            "app.about" => tl!("Shows the version, community links and credits in a Filme window."),
             "help.fisilab" => tl!("Abre a janela Sobre a Suíte FisiLab: créditos, manifesto e parceiros."),
             _ => return None,
         }

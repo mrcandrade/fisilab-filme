@@ -124,7 +124,7 @@ pub(crate) fn commands() -> Vec<CommandSpec> {
         }),
         spec(
             "file.exportSelectionProject",
-            "Selection as FisiFilme Project…",
+            "Selection as FisiLab Filme Project…",
             &["File", "Export"],
             None,
             r#"{"path":str,"items":[id]?}"#,
@@ -336,7 +336,7 @@ fn only_one_project(_: &Session) -> std::result::Result<(), String> {
     Err("only one project is open".into())
 }
 
-const NO_CAPTIONS: &str = "the clip's media has no embedded captions FisiFilme can read (embedded CEA-608/708 caption streams are not supported yet)";
+const NO_CAPTIONS: &str = "the clip's media has no embedded captions Filme can read (embedded CEA-608/708 caption streams are not supported yet)";
 
 fn no_embedded_captions(_: &Session) -> std::result::Result<(), String> {
     Err(NO_CAPTIONS.into())
@@ -1055,7 +1055,7 @@ fn source_settings(s: &mut Session, p: &Value) -> Result<Value> {
         "codec": codec,
         "container": m.info.container,
         "settings": [],
-        "message": format!("{} has no source settings in FisiFilme. Source settings apply to camera raw formats (R3D, ARRIRAW, CinemaDNG, ProRes RAW…), which FisiFilme does not decode.", if codec.is_empty() { "This clip".to_string() } else { codec.to_uppercase() }),
+        "message": format!("{} has no source settings in Filme. Source settings apply to camera raw formats (R3D, ARRIRAW, CinemaDNG, ProRes RAW…), which Filme does not decode.", if codec.is_empty() { "This clip".to_string() } else { codec.to_uppercase() }),
     }))
 }
 
@@ -1282,7 +1282,7 @@ pub fn system_report() -> Value {
     let formats: Vec<Value> =
         filmcraft_export::Format::ALL.iter().map(|f| json!({"format": f.label(), "available": filmcraft_export::available(*f)})).collect();
     json!({
-        "app": format!("FisiFilme {}", env!("CARGO_PKG_VERSION")),
+        "app": format!("FisiLab Filme {}", env!("CARGO_PKG_VERSION")),
         "os": std::env::consts::OS,
         "family": std::env::consts::FAMILY,
         "arch": std::env::consts::ARCH,

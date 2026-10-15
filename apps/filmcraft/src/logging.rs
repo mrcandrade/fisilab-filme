@@ -8,7 +8,8 @@
 //! start moves the previous log to `filmcraft.1.log` (and that one to `.2`), so the log of a run
 //! that crashed survives the next launch.
 //!
-//! Levels: `info` for FilmCraft's own crates, `warn` for everything else (wgpu and naga are
+//! Levels: `info` for FilmCraft's own crates and this binary (`fisilab_filme`, the module path of the
+//! `fisilab-filme` executable), `warn` for everything else (wgpu and naga are
 //! chatty). `RUST_LOG` replaces that with env_logger-style directives: `debug`,
 //! `warn,filmcraft_codecs=trace`, `wgpu_core=info`. A directive ending in `*` matches every target
 //! that starts with it (`filmcraft*=debug`).
@@ -41,7 +42,7 @@ pub const MAX_FILE_BYTES: u64 = 16 * 1024 * 1024;
 /// Records kept in memory until the log file is attached.
 pub const MAX_PENDING: usize = 512;
 /// The built-in filter when `RUST_LOG` is unset or empty.
-pub const DEFAULT_FILTER: &str = "warn,filmcraft*=info";
+pub const DEFAULT_FILTER: &str = "warn,filmcraft*=info,fisilab_filme=info";
 
 /// Per-target level filter parsed from env_logger-style directives.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -315,6 +316,8 @@ mod tests {
         let f = Filter::parse(DEFAULT_FILTER);
         assert_eq!(f.level_for("filmcraft"), LevelFilter::Info);
         assert_eq!(f.level_for("filmcraft::audio"), LevelFilter::Info);
+        assert_eq!(f.level_for("fisilab_filme"), LevelFilter::Info);
+        assert_eq!(f.level_for("fisilab_filme::audio"), LevelFilter::Info);
         assert_eq!(f.level_for("filmcraft_ui_egui::play_ahead"), LevelFilter::Info);
         assert_eq!(f.level_for("filmcraft_codecs::mxf"), LevelFilter::Info);
         assert_eq!(f.level_for("wgpu_core::device"), LevelFilter::Warn);

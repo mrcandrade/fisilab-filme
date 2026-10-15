@@ -4,7 +4,7 @@
 # using Ukrainian video-editing vocabulary. No proprietary localization resources were used.
 # Core menu coverage; other interface strings fall back to English.
 
-	About FisiFilme	Про FisiFilme
+	About Filme	Про Filme
 	Add Audio Submix Track	Додати доріжку підміксу аудіо
 	Add Caption at Playhead	Додати субтитр у позиції курсора відтворення
 	Add Chapter Marker…	Додати маркер розділу…
@@ -125,7 +125,7 @@
 	File	Файл
 	File…	Файл…
 	Fill frame	Заповнити кадр
-	FisiFilme Help…	Довідка FisiFilme…
+	Filme Help…	Довідка Filme…
 	Find Next	Знайти далі
 	Find…	Знайти…
 	Fit	Умістити
@@ -294,7 +294,7 @@
 	Select Previous Graphic	Вибрати попередній графічний елемент
 	Select Previous Layer	Вибрати попередній шар
 	Selection Follows Playhead	Виділення слідує за курсором відтворення
-	Selection as FisiFilme Project…	Виділення як проєкт FisiFilme…
+	Selection as FisiLab Filme Project…	Виділення як проєкт FisiLab Filme…
 	Selection…	Виділення…
 	Send Backward	Перемістити назад
 	Send to Back	На задній план

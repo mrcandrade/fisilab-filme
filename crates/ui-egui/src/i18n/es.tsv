@@ -14,7 +14,7 @@
 # way. Product and technology names (FilmCraft, ArtCraft, Lumetri, ProRes, LUFS…) keep their
 # spelling. "video" is written without an accent, as in the rest of this catalog.
 
-	About FisiFilme	Acerca de FisiFilme
+	About Filme	Acerca de Filme
 	Add Audio Submix Track	Añadir pista de submezcla de audio
 	Add Caption at Playhead	Añadir subtítulo en el cabezal
 	Add Chapter Marker…	Añadir marcador de capítulo…
@@ -132,7 +132,7 @@
 	File	Archivo
 	File…	Archivo…
 	Fill frame	Rellenar fotograma
-	FisiFilme Help…	Ayuda de FisiFilme…
+	Filme Help…	Ayuda de Filme…
 	Find Next	Buscar siguiente
 	Find…	Buscar…
 	Fit	Ajustar
@@ -303,7 +303,7 @@
 	Select Previous Graphic	Seleccionar gráfico anterior
 	Select Previous Layer	Seleccionar capa anterior
 	Selection Follows Playhead	La selección sigue al cabezal
-	Selection as FisiFilme Project…	Selección como proyecto de FisiFilme…
+	Selection as FisiLab Filme Project…	Selección como proyecto de FisiLab Filme…
 	Selection…	Selección…
 	Send Backward	Enviar atrás
 	Send to Back	Enviar al fondo
@@ -428,8 +428,8 @@
 	No background jobs.	No hay tareas en segundo plano.
 	Recover Unsaved Changes	Recuperar cambios no guardados
 	Untitled	Sin título
-	FisiFilme was closed while “{name}” had unsaved changes.	FisiFilme se cerró mientras “{name}” tenía cambios sin guardar.
-	FisiFilme quit unexpectedly while “{name}” had unsaved changes.	FisiFilme se cerró de forma inesperada mientras “{name}” tenía cambios sin guardar.
+	Filme was closed while “{name}” had unsaved changes.	Filme se cerró mientras “{name}” tenía cambios sin guardar.
+	Filme quit unexpectedly while “{name}” had unsaved changes.	Filme se cerró de forma inesperada mientras “{name}” tenía cambios sin guardar.
 	Recover unsaved changes from {when}?	¿Recuperar los cambios no guardados de {when}?
 	The project had not been saved yet.	El proyecto aún no se había guardado.
 	{n} sessions have unsaved changes:	{n} sesiones tienen cambios sin guardar:
@@ -955,7 +955,7 @@
 	Font family	Familia de fuentes
 	Label Colors	Colores de etiqueta
 	Decoded frames held for the monitors and thumbnails: {used} of {budget}.	Fotogramas descodificados en memoria para los monitores y miniaturas: {used} de {budget}.
-	FisiFilme keeps the rest of the RAM free for other applications.	FisiFilme deja el resto de la RAM libre para otras aplicaciones.
+	Filme keeps the rest of the RAM free for other applications.	Filme deja el resto de la RAM libre para otras aplicaciones.
 	not available in this session	no disponible en esta sesión
 	Currently: {loc} — {files} file(s), {size}	Actualmente: {loc} — {files} archivo(s), {size}
 	 ({ch} output channels)	 ({ch} canales de salida)
@@ -1066,7 +1066,7 @@
 	Video Frame	Fotograma de video
 	Pin To	Fijar a
 	Pinned Edges	Bordes fijados
-	FisiFilme Graphics Template	Plantilla de gráficos de FisiFilme
+	FisiLab Filme Graphics Template	Plantilla de gráficos de FisiLab Filme
 	{n} Font	{n} Fuente
 	{n} Size	{n} Tamaño
 	{n} Color	{n} Color
@@ -1076,7 +1076,7 @@
 	Export As Motion Graphics Template	Exportar como plantilla de animación
 	Category:	Categoría:
 	Editable properties:	Propiedades editables:
-	Saved as a FisiFilme graphics template (.fcgt) in your templates folder.	Se guarda como plantilla de gráficos de FisiFilme (.fcgt) en tu carpeta de plantillas.
+	Saved as a FisiLab Filme graphics template (.fcgt) in your templates folder.	Se guarda como plantilla de gráficos de FisiLab Filme (.fcgt) en tu carpeta de plantillas.
 	Exported graphics template to {path}	Plantilla de gráficos exportada a {path}
 	Replace Fonts in Projects	Reemplazar fuentes en proyectos
 	Fonts used in the project:	Fuentes usadas en el proyecto:
@@ -1446,7 +1446,7 @@
 	Center of Sphere	Centro de la esfera
 	Cents	Centésimas
 	Change to Color	Cambiar a color
-	Changes are copied in the background a moment after each edit. If FisiFilme quits unexpectedly, they are offered the next time it starts.	Los cambios se copian en segundo plano poco después de cada edición. Si FisiFilme se cierra de forma inesperada, se ofrecen la próxima vez que se inicie.
+	Changes are copied in the background a moment after each edit. If Filme quits unexpectedly, they are offered the next time it starts.	Los cambios se copian en segundo plano poco después de cada edición. Si Filme se cierra de forma inesperada, se ofrecen la próxima vez que se inicie.
 	Channel	Canal
 	Channel Blur	Desenfoque de canal
 	Channel Mix	Mezcla de canales
@@ -1819,13 +1819,13 @@
 	Hard Limiter	Limitador duro
 	Hard Mix	Mezcla definida
 	Hardware decoding	Descodificación por hardware
-	Hardware decoding: Auto uses the system's video decoder (VideoToolbox on macOS, Media Foundation on Windows, VA-API or NVDEC for H.264 and HEVC on Linux) for the streams it supports, and FisiFilme's own decoder for everything else or if the hardware fails. Media that is already open keeps its decoder until it is reopened.	Descodificación por hardware: Automático usa el descodificador de video del sistema (VideoToolbox en macOS, Media Foundation en Windows, VA-API o NVDEC para H.264 y HEVC en Linux) para los flujos que admite, y el descodificador propio de FisiFilme para todo lo demás o si falla el hardware. Los medios ya abiertos mantienen su descodificador hasta que se vuelven a abrir.
+	Hardware decoding: Auto uses the system's video decoder (VideoToolbox on macOS, Media Foundation on Windows, VA-API or NVDEC for H.264 and HEVC on Linux) for the streams it supports, and Filme's own decoder for everything else or if the hardware fails. Media that is already open keeps its decoder until it is reopened.	Descodificación por hardware: Automático usa el descodificador de video del sistema (VideoToolbox en macOS, Media Foundation en Windows, VA-API o NVDEC para H.264 y HEVC en Linux) para los flujos que admite, y el descodificador propio de Filme para todo lo demás o si falla el hardware. Los medios ya abiertos mantienen su descodificador hasta que se vuelven a abrir.
 	Head Size	Tamaño de la cabeza
 	Heart	Corazón
 	Height	Altura
 	Hexagon	Hexágono
 	Hide Back Face	Ocultar la cara posterior
-	Hide FisiFilme	Ocultar FisiFilme
+	Hide Filme	Ocultar Filme
 	Hide Others	Ocultar otras
 	High	Alta
 	High Cutoff	Corte de agudos
@@ -2096,7 +2096,7 @@
 	Night	Noche
 	No Motion	Sin movimiento
 	No Scroll	Sin desplazamiento
-	No plugins are installed. Changes will take effect the next time you start FisiFilme.	No hay complementos instalados. Los cambios se aplicarán la próxima vez que inicies FisiFilme.
+	No plugins are installed. Changes will take effect the next time you start Filme.	No hay complementos instalados. Los cambios se aplicarán la próxima vez que inicies Filme.
 	Noise	Ruido
 	Noise & Grain	Ruido y grano
 	Noise (Legacy)	Ruido (heredado)
@@ -2528,7 +2528,7 @@
 	Template Properties	Propiedades de la plantilla
 	Text Animator	Animador de texto
 	Text Color	Color del texto
-	The media cache holds render previews of unsaved projects and other files FisiFilme can recreate. Deleting them is always safe; FisiFilme rebuilds them as needed.	La caché de medios guarda previsualizaciones procesadas de proyectos sin guardar y otros archivos que FisiFilme puede volver a crear. Eliminarlos siempre es seguro; FisiFilme los regenera cuando hace falta.
+	The media cache holds render previews of unsaved projects and other files Filme can recreate. Deleting them is always safe; Filme rebuilds them as needed.	La caché de medios guarda previsualizaciones procesadas de proyectos sin guardar y otros archivos que Filme puede volver a crear. Eliminarlos siempre es seguro; Filme los regenera cuando hace falta.
 	Thickness	Grosor
 	Tile Gradient	Degradado en mosaico
 	Tilt	Inclinación
@@ -2738,7 +2738,7 @@
 	System Compatibility Report	Informe de compatibilidad del sistema
 	no GPU adapter: the CPU compositor is used	no hay adaptador de GPU: se usa el compositor de CPU
 	Avid Log Exchange	Avid Log Exchange
-	FisiFilme Project	Proyecto de FisiFilme
+	FisiLab Filme Project	Proyecto de FisiLab Filme
 	{name} Selection.fcproj	{name} Selección.fcproj
 	{name} (Simplified)	{name} (simplificada)
 	Find in:	Buscar en:
@@ -2878,7 +2878,7 @@
 	Start Queue	Iniciar cola
 	Stop	Detener
 	Clear Finished	Borrar terminadas
-	Not supported by FisiFilme's encoders yet	Los codificadores de FisiFilme aún no lo admiten
+	Not supported by Filme's encoders yet	Los codificadores de Filme aún no lo admiten
 	Sequence name	Nombre de la secuencia
 	Folder	Carpeta
 	Preset	Ajuste preestablecido
@@ -2968,7 +2968,7 @@
 	Drag a clip to slide it between its neighbours.	Arrastra un clip para deslizarlo entre sus vecinos.
 	Drag to scroll the timeline.	Arrastra para desplazar la línea de tiempo.
 	Click to zoom in; Opt-click to zoom out.	Haz clic para acercar; Opción+clic para alejar.
-	FisiFilme hit an error	FisiFilme ha encontrado un error
+	Filme hit an error	Filme ha encontrado un error
 	Details: {path}	Detalles: {path}
 	Opened {url}	Abierto {url}
 	(empty)	(vacío)
@@ -3228,7 +3228,7 @@
 	QuickTime, ProRes 4444 (4:4:4) with alpha channel, 24-bit 48 kHz PCM	QuickTime, ProRes 4444 (4:4:4) con canal alfa, PCM de 24 bits y 48 kHz
 	QuickTime, ProRes 4444 XQ (4:4:4), 24-bit 48 kHz PCM	QuickTime, ProRes 4444 XQ (4:4:4), PCM de 24 bits y 48 kHz
 	QuickTime, ProRes 422, 24-bit 48 kHz PCM	QuickTime, ProRes 422, PCM de 24 bits y 48 kHz
-	Quit FisiFilme	Salir de FisiFilme
+	Quit Filme	Salir de Filme
 	Rate Stretch Tool	Herramienta Ajuste de velocidad
 	Razor Tool	Herramienta Cuchilla
 	Rectangle Tool	Herramienta Rectángulo
@@ -3529,8 +3529,8 @@
 	Composite in Linear Color	Componer en color lineal
 	Auto Tone Map Media (HDR and log into SDR)	Mapeo de tonos automático de medios (HDR y log a SDR)
 	Configure…	Configurar…
-	Not supported in FisiFilme yet	FisiFilme aún no lo admite
-	FisiFilme always composites in linear light	FisiFilme siempre compone en luz lineal
+	Not supported in Filme yet	Filme aún no lo admite
+	Filme always composites in linear light	Filme siempre compone en luz lineal
 	Loop marked range	Bucle del intervalo marcado
 	Play Source	Reproducir origen
 	Source Play/Stop	Reproducir/Detener origen
@@ -3596,11 +3596,11 @@
 	Opens in your web browser: {url}	Se abre en el navegador web: {url}
 	Saves this session's log and shows it in your file manager.	Guarda el registro de esta sesión y lo muestra en el explorador de archivos.
 	Shows a report on this computer.	Muestra un informe sobre este equipo.
-	Shows the version, community links and credits in a FisiFilme window.	Muestra la versión, los enlaces de la comunidad y los créditos en una ventana de FisiFilme.
+	Shows the version, community links and credits in a Filme window.	Muestra la versión, los enlaces de la comunidad y los créditos en una ventana de Filme.
 	Couldn't open your web browser	No se pudo abrir el navegador web
 	Open this address in your browser yourself:	Abre esta dirección tú mismo en el navegador:
 
-# Suíte FisiLab (FisiFilme): Help menu, About, themes. Sources are Brazilian Portuguese.
+# Suíte FisiLab (Filme): Help menu, About, themes. Sources are Brazilian Portuguese.
 	Sobre a Suíte FisiLab…	Acerca de la Suite FisiLab…
 	Site da Suíte FisiLab	Sitio web de la Suite FisiLab
 	Manifesto pelas tecnologias livres	Manifiesto por las tecnologías libres

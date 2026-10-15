@@ -3,7 +3,7 @@
 //! The Linux shell (Wayland *and* X11) resolves the window to a `.desktop` file by app id (set in
 //! `main.rs` via `eframe`'s `with_app_id`) and takes the taskbar / window-list icon from its
 //! `Icon=` entry in the hicolor theme. Packaging installs both
-//! (`packaging/linux/br.ufrgs.fisilab.fisifilme.desktop` and the hicolor PNGs) — but a source-tree
+//! (`packaging/linux/br.ufrgs.fisilab.filme.desktop` and the hicolor PNGs) — but a source-tree
 //! run has neither, so KDE/GNOME fall back to the generic Wayland icon. The fix is to ensure a
 //! user-level entry for those runs: when no entry for the app id exists in any XDG data dir,
 //! install one (plus the hicolor icon PNGs, read from this checkout's `assets/fisilab`, so
@@ -79,7 +79,7 @@ fn ensure() -> Result<(), DevIconError> {
             && let Some(parent) = dest.parent()
         {
             // The checkout this binary was built from; a missing icon only costs the icon.
-            let src = std::path::Path::new(ICON_DIR).join(format!("fisifilme-{size}.png"));
+            let src = std::path::Path::new(ICON_DIR).join(format!("fisilab-filme-{size}.png"));
             if !src.is_file() {
                 log::warn!("dev desktop entry: icon {} not found; skipping it", src.display());
                 continue;
@@ -90,7 +90,7 @@ fn ensure() -> Result<(), DevIconError> {
     }
     let applications = user_dir.join("applications");
     std::fs::create_dir_all(&applications).map_err(DevIconError::Io)?;
-    let body = desktop_file_content(crate::APP_ID, "FisiFilme", exe);
+    let body = desktop_file_content(crate::APP_ID, "Filme", exe);
     std::fs::write(applications.join(&file_name), body).map_err(DevIconError::Io)?;
     Ok(())
 }
@@ -199,7 +199,7 @@ fn unescape_string_value(value: &str) -> String {
     out
 }
 
-/// The `.desktop` body: same fields as `packaging/linux/br.ufrgs.fisilab.fisifilme.desktop`, with
+/// The `.desktop` body: same fields as `packaging/linux/br.ufrgs.fisilab.filme.desktop`, with
 /// `Exec` pointing at this exact binary (a dev build isn't on `$PATH`, so `TryExec` is left out)
 /// and the icon by theme name.
 fn desktop_file_content(app_id: &str, name: &str, exe: &str) -> String {
@@ -263,22 +263,22 @@ mod tests {
     #[test]
     fn icon_sources_exist_in_the_checkout() {
         for size in ICON_SIZES {
-            let p = std::path::Path::new(ICON_DIR).join(format!("fisifilme-{size}.png"));
+            let p = std::path::Path::new(ICON_DIR).join(format!("fisilab-filme-{size}.png"));
             assert!(p.is_file(), "{}", p.display());
         }
     }
 
     #[test]
     fn desktop_file_matches_the_packaged_fields() {
-        let packaged = include_str!("../../../packaging/linux/br.ufrgs.fisilab.fisifilme.desktop");
+        let packaged = include_str!("../../../packaging/linux/br.ufrgs.fisilab.filme.desktop");
         let expected = packaged
             .lines()
             .filter(|l| !l.starts_with("TryExec="))
-            .map(|l| if l.starts_with("Exec=") { "Exec=\"/target/debug/fisifilme\" %F" } else { l })
+            .map(|l| if l.starts_with("Exec=") { "Exec=\"/target/debug/fisilab-filme\" %F" } else { l })
             .collect::<Vec<_>>()
             .join("\n")
             + "\n";
-        let body = desktop_file_content("br.ufrgs.fisilab.fisifilme", "FisiFilme", "/target/debug/fisifilme");
+        let body = desktop_file_content("br.ufrgs.fisilab.filme", "Filme", "/target/debug/fisilab-filme");
         assert_eq!(body, expected);
     }
 
@@ -298,7 +298,7 @@ mod tests {
     #[test]
     fn exec_round_trips_through_both_layers() {
         for exe in ["/home/dev/Projects/filmcraft/target/debug/filmcraft", "/opt/film craft/filmcraft", "/a$b\"c`d\\e"] {
-            let body = desktop_file_content("br.ufrgs.fisilab.fisifilme", "FisiFilme", exe);
+            let body = desktop_file_content("br.ufrgs.fisilab.filme", "Filme", exe);
             assert_eq!(exec_line(&body).as_deref(), Some(exe));
             assert!(desktop_file_exec_is_ours(&body, exe));
         }
@@ -308,7 +308,7 @@ mod tests {
     /// prefix, and a packaged `Exec=filmcraft` are all someone else's entry.
     #[test]
     fn desktop_file_exec_is_ours_matches_only_our_binary() {
-        let body = desktop_file_content("br.ufrgs.fisilab.fisifilme", "FisiFilme", "/a/filmcraft");
+        let body = desktop_file_content("br.ufrgs.fisilab.filme", "Filme", "/a/filmcraft");
         assert!(!desktop_file_exec_is_ours(&body, "/a/filmcraft-old"));
         assert!(!desktop_file_exec_is_ours(&body, "/b/filmcraft"));
         assert!(!desktop_file_exec_is_ours("Exec=filmcraft %F\n", "/a/filmcraft"));

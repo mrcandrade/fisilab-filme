@@ -750,7 +750,7 @@ fn custom(app: &mut FilmcraftApp, ui: &mut Ui, d: &mut SettingsDraft, name: &str
         "memoryInfo" => {
             let (used, budget) = app.frames.cache_usage();
             note(ui, &t, &tlf!("Decoded frames held for the monitors and thumbnails: {used} of {budget}.", used = mb(used as u64), budget = mb(budget as u64)));
-            note(ui, &t, tl!("FisiFilme keeps the rest of the RAM free for other applications."));
+            note(ui, &t, tl!("Filme keeps the rest of the RAM free for other applications."));
         }
         "mediaCacheInfo" => {
             if d.cache_info.is_null() {
@@ -1053,7 +1053,7 @@ mod tests {
         app.apply_prefs(&ctx);
         assert_eq!(app.tokens.kind, ThemeKind::UfrgsDia);
         assert!(!app.ui.dark);
-        assert_eq!(ctx.theme(), egui::Theme::Light, "egui's style follows FisiFilme's choice");
+        assert_eq!(ctx.theme(), egui::Theme::Light, "egui's style follows Filme's choice");
         system.store(1, Ordering::Relaxed);
         app.apply_prefs(&ctx);
         assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite);

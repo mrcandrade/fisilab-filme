@@ -33,8 +33,8 @@ pub fn show(app: &mut FilmcraftApp, ctx: &egui::Context) {
     let mut open = true;
     match d {
         Dialog::About => {
-            egui::Window::new(tl!("About FisiFilme"))
-                .id(egui::Id::new("About FisiFilme"))
+            egui::Window::new(tl!("About Filme"))
+                .id(egui::Id::new("About Filme"))
                 .open(&mut open)
                 .collapsible(false)
                 .resizable(false)
@@ -409,7 +409,7 @@ fn delete_tracks(app: &mut FilmcraftApp, ctx: &egui::Context) -> bool {
     keep
 }
 
-/// Help ▸ About FisiFilme, in three tabs: About (version, the Suíte FisiLab and project links),
+/// Help ▸ About Filme, in three tabs: About (version, the Suíte FisiLab and project links),
 /// Contributors and Models (the credits compiled in from `contributors/contributors.json`, see
 /// `crate::credits` and docs/contributors.md).
 ///
@@ -454,7 +454,7 @@ fn about_tab(app: &mut FilmcraftApp, ui: &mut egui::Ui) {
     use crate::links;
     let t = app.tokens;
     ui.set_width(380.0);
-    ui.heading("FisiFilme");
+    ui.heading("Filme");
     ui.label(tlf!("Version {version}", version = env!("CARGO_PKG_VERSION")));
     ui.label(tl!("Editor de vídeo não linear em Rust puro, parte da Suíte FisiLab (UFRGS). Baseado no FilmCraft, do ArtCraft Team e contribuidores."));
     ui.add_space(10.0);

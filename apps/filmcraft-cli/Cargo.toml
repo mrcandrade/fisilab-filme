@@ -1,6 +1,6 @@
 [package]
 name = "filmcraft-cli"
-description = "FisiFilme headless CLI and MCP server (Suíte FisiLab; based on FilmCraft)"
+description = "Filme headless CLI and MCP server (Suíte FisiLab; based on FilmCraft)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,9 +8,9 @@ license.workspace = true
 [lints]
 workspace = true
 
-# Suíte FisiLab: the CLI executable is fisifilme-cli(.exe); the package name stays `filmcraft-cli`.
+# Suíte FisiLab: the CLI executable is fisilab-filme-cli(.exe); the package name stays `filmcraft-cli`.
 [[bin]]
-name = "fisifilme-cli"
+name = "fisilab-filme-cli"
 path = "src/main.rs"
 
 [features]

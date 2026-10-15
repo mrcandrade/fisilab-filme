@@ -56,15 +56,15 @@ fn stdout_failed(e: std::io::Error) {
     if STDOUT_GONE.swap(true, Ordering::Relaxed) || e.kind() == std::io::ErrorKind::BrokenPipe {
         return;
     }
-    diag(format_args!("fisifilme-cli: can't write to stdout: {e}"));
+    diag(format_args!("fisilab-filme-cli: can't write to stdout: {e}"));
     STDOUT_ERROR.store(true, Ordering::Relaxed);
 }
 
 const HELP: &str = "\
-fisifilme-cli: drive FisiFilme from the shell (headless engine, or the live app with --bridge)
+fisilab-filme-cli: drive Filme from the shell (headless engine, or the live app with --bridge)
 
 USAGE
-  fisifilme-cli [OPTIONS] <SUBCOMMAND> [ARGS]
+  fisilab-filme-cli [OPTIONS] <SUBCOMMAND> [ARGS]
 
 SUBCOMMANDS
   exec <id> [key=value ...]     run one command; prints its result as JSON
@@ -104,8 +104,8 @@ OPTIONS
   --demo                        open the built-in demo project (headless)
   --save                        save the project back to --project when done
   --save-as <p.fcproj>          save the project to this path when done
-  --bridge <127.0.0.1:PORT>     send commands to the running app (`fisifilme --control PORT`)
-  --data-dir <dir>              FisiFilme data directory for user export presets (headless;
+  --bridge <127.0.0.1:PORT>     send commands to the running app (`fisilab-filme --control PORT`)
+  --data-dir <dir>              Filme data directory for user export presets (headless;
                                 default: the app's data directory)
   --keep-going                  `run`: report failing lines and continue
   --compact                     one-line JSON output
@@ -131,12 +131,12 @@ fn diag(msg: std::fmt::Arguments) {
 }
 
 fn usage(msg: impl std::fmt::Display) -> ! {
-    diag(format_args!("fisifilme-cli: {msg}\nRun `fisifilme-cli help` for usage."));
+    diag(format_args!("fisilab-filme-cli: {msg}\nRun `fisilab-filme-cli help` for usage."));
     std::process::exit(2)
 }
 
 fn fail(msg: impl std::fmt::Display) -> ! {
-    diag(format_args!("fisifilme-cli: {msg}"));
+    diag(format_args!("fisilab-filme-cli: {msg}"));
     std::process::exit(1)
 }
 
@@ -274,7 +274,7 @@ async fn cli() {
     }
     // `--version` anywhere and `-V` as the subcommand, also after global options (`--demo --version`, #710).
     if a.wants_version() {
-        outln!("fisifilme-cli {}", env!("CARGO_PKG_VERSION"));
+        outln!("fisilab-filme-cli {}", env!("CARGO_PKG_VERSION"));
         return;
     }
     register_hardware_decoders();
@@ -282,7 +282,7 @@ async fn cli() {
     let Some(cmd) = a.pos(0) else { usage("missing subcommand") };
     match cmd {
         "help" | "-h" => out!("{HELP}"),
-        "version" => outln!("fisifilme-cli {}", env!("CARGO_PKG_VERSION")),
+        "version" => outln!("fisilab-filme-cli {}", env!("CARGO_PKG_VERSION")),
         "probe" => {
             let path = a.pos(1).unwrap_or_else(|| usage("probe <media> [--image-sequence]"));
             match probe::probe(path, a.flag("--image-sequence")) {
@@ -314,7 +314,7 @@ async fn cli() {
                 let id = a.pos(1).unwrap_or_else(|| usage("describe <id>"));
                 match list.iter().find(|c| c["id"] == id) {
                     Some(c) => print(&a, c),
-                    None => fail(format!("unknown command `{id}` (try `fisifilme-cli commands {id}`)")),
+                    None => fail(format!("unknown command `{id}` (try `fisilab-filme-cli commands {id}`)")),
                 }
                 return;
             }
@@ -531,7 +531,7 @@ fn offline_media(result: &Value) -> Vec<Value> {
 /// One stderr line per offline item that rendered as placeholder frames (#1054).
 fn offline_warning(offline: &[Value]) -> String {
     let s = |o: &Value, k: &str| o.get(k).and_then(Value::as_str).unwrap_or("").to_string();
-    let mut msg = format!("fisifilme-cli: warning: {} offline media item(s) rendered as placeholder frames:", offline.len());
+    let mut msg = format!("fisilab-filme-cli: warning: {} offline media item(s) rendered as placeholder frames:", offline.len());
     for o in offline {
         let id = o.get("item").and_then(Value::as_u64).map(|i| i.to_string()).unwrap_or_default();
         msg.push_str(&format!("\n  item {id} {} ({}): {}", s(o, "name"), s(o, "status"), s(o, "path")));

@@ -497,8 +497,8 @@ pub fn portable_data_dir(exe_dir: &Path) -> Option<PathBuf> {
 
 /// The data directory. `FILMCRAFT_DATA_DIR` overrides; a portable install ([`PORTABLE_MARKER`] next
 /// to the executable) uses `<exe dir>/data`; otherwise the per-user directory:
-/// macOS `~/Library/Application Support/FisiFilme`, Windows `%APPDATA%\FisiFilme`,
-/// elsewhere `$XDG_DATA_HOME/fisifilme` or `~/.local/share/fisifilme` (Suíte FisiLab: its own
+/// macOS `~/Library/Application Support/FisiLab Filme`, Windows `%APPDATA%\FisiLab Filme`,
+/// elsewhere `$XDG_DATA_HOME/fisilab-filme` or `~/.local/share/fisilab-filme` (Suíte FisiLab: its own
 /// folders, so an upstream FilmCraft install keeps its data).
 pub fn default_data_dir() -> Option<PathBuf> {
     let env = |k: &str| std::env::var_os(k).filter(|v| !v.is_empty()).map(PathBuf::from);
@@ -509,12 +509,12 @@ pub fn default_data_dir() -> Option<PathBuf> {
         return Some(d);
     }
     if cfg!(target_os = "macos") {
-        return env("HOME").map(|h| h.join("Library/Application Support/FisiFilme"));
+        return env("HOME").map(|h| h.join("Library/Application Support/FisiLab Filme"));
     }
     if cfg!(windows) {
-        return env("APPDATA").map(|h| h.join("FisiFilme"));
+        return env("APPDATA").map(|h| h.join("FisiLab Filme"));
     }
-    env("XDG_DATA_HOME").map(|d| d.join("fisifilme")).or_else(|| env("HOME").map(|h| h.join(".local/share/fisifilme")))
+    env("XDG_DATA_HOME").map(|d| d.join("fisilab-filme")).or_else(|| env("HOME").map(|h| h.join(".local/share/fisilab-filme")))
 }
 
 pub fn unix_now() -> i64 {

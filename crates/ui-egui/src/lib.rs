@@ -1,4 +1,4 @@
-//! The FisiFilme egui frontend (Suíte FisiLab; based on the FilmCraft frontend).
+//! The Filme egui frontend (Suíte FisiLab; based on the FilmCraft frontend).
 //!
 //! Thin by design: all project changes go through `filmcraft_engine::Session::execute`; this crate
 //! owns only presentation state ([`state::UiState`]), GPU textures, the playback clock and the
@@ -75,10 +75,10 @@ use native_dialogs::FileDialog;
 use state::UiState;
 use theme::{ThemeKind, Tokens};
 
-/// What FisiFilme tells the Suíte FisiLab brand (`fisilab_brand`): the About window and the
+/// What Filme tells the Suíte FisiLab brand (`fisilab_brand`): the About window and the
 /// opening animation read it.
 pub const APP_INFO: fisilab_brand::AppInfo = fisilab_brand::AppInfo {
-    name: "FisiFilme",
+    name: "Filme",
     tagline: "Editor de vídeo",
     equivalent: "Adobe Premiere Pro",
     version: env!("CARGO_PKG_VERSION"),
@@ -279,7 +279,7 @@ pub(crate) const EXPORT_SAVE_DIALOGS: [(&str, &str, &str); 7] = [
     ("file.exportFcpxml", "FCPXML", "fcpxml"),
     ("file.exportOtio", "OpenTimelineIO", "otio"),
     ("file.exportAle", "Avid Log Exchange", "ale"),
-    ("file.exportSelectionProject", "FisiFilme Project", "fcproj"),
+    ("file.exportSelectionProject", "FisiLab Filme Project", "fcproj"),
 ];
 
 pub struct FilmcraftApp {
@@ -1944,8 +1944,8 @@ impl FilmcraftApp {
     fn error_window(&mut self, ctx: &egui::Context) {
         let Some(msg) = self.ui_error.clone() else { return };
         let mut close = false;
-        egui::Window::new(tl!("FisiFilme hit an error"))
-            .id(egui::Id::new("FisiFilme hit an error"))
+        egui::Window::new(tl!("Filme hit an error"))
+            .id(egui::Id::new("Filme hit an error"))
             .collapsible(false)
             .resizable(false)
             .pivot(egui::Align2::CENTER_CENTER)
