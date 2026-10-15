@@ -77,6 +77,7 @@ de Tecnologia Acadêmica. Este arquivo lista o que foi alterado e por quê.
 ### Outros
 - A pasta `.github/` (CI, releases e financiamento do projeto original) foi apagada.
 - O preset de atalhos padrão chama-se “FisiLab Filme Default”.
+- O empacotamento Linux (AppImage e .deb, em `packaging/linux/`) usa os novos nomes (`FisiLab-Filme-<versão>-x86_64.AppImage`, `fisilab-filme_<versão>_amd64.deb`), ícones da suíte e o id `br.ufrgs.fisilab.filme`.
 - Não há telemetria, verificação de atualizações nem envio de relatórios de falha no FilmCraft; os
   únicos downloads são os modelos opcionais de voz/transcrição do Hugging Face e do GitHub
   (mantidos).
@@ -91,6 +92,6 @@ de Tecnologia Acadêmica. Este arquivo lista o que foi alterado e por quê.
   (a lista mostra “FisiLab Filme …”, mas o valor salvo é o original, por compatibilidade).
 - LICENSE-MIT, LICENSE-APACHE, ATTRIBUTION.md e o texto original do NOTICE (agora após o
   cabeçalho da Suíte FisiLab). O README original está em `README.upstream.md`.
-- Os empacotamentos de macOS, Linux e FreeBSD em `packaging/` não foram adaptados (fora do escopo
-  da suíte, que distribui para Windows).
+- Os empacotamentos de macOS e FreeBSD em `packaging/` não foram adaptados (fora do escopo da
+  suíte); o do Flatpak também não.
 - A documentação em `docs/` (histórico do projeto original).

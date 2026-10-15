@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
 Name=Filme
-GenericName=Video Editor
-Comment=Edit video, color and sound
+GenericName=Editor de vídeo
+Comment=Editor de vídeo — Suíte FisiLab (alternativa livre)
 Exec=fisilab-filme %F
 TryExec=fisilab-filme
 Icon=br.ufrgs.fisilab.filme
@@ -11,4 +11,4 @@ StartupNotify=true
 StartupWMClass=br.ufrgs.fisilab.filme
 Categories=AudioVideo;Video;AudioVideoEditing;
 MimeType=application/x-filmcraft;video/mp4;video/x-m4v;video/quicktime;video/x-matroska;video/webm;video/vnd.avi;video/x-msvideo;application/mxf;video/mp2t;video/mpeg;video/3gpp;
-Keywords=video;editor;film;timeline;color;grading;nle;
+Keywords=video;editor;film;timeline;color;grading;nle;vídeo;editor de vídeo;filme;linha do tempo;cor;

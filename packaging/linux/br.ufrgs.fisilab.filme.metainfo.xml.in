@@ -2,26 +2,28 @@
 <!-- AppStream metadata (software centres, Flathub). Template: package.sh and the Flatpak
      manifest substitute @VERSION@ and @DATE@ from Cargo.toml and the build date. -->
 <component type="desktop-application">
-  <id>ai.storyteller.filmcraft</id>
+  <id>br.ufrgs.fisilab.filme</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT OR Apache-2.0</project_license>
-  <name>FilmCraft</name>
-  <summary>Edit video, color and sound</summary>
-  <developer id="ai.storyteller">
-    <name>Learning Machines LLC</name>
+  <name>Filme</name>
+  <summary>Editor de vídeo — Suíte FisiLab (alternativa livre)</summary>
+  <developer id="br.ufrgs.fisilab">
+    <name>FisiLab — LARFIC</name>
   </developer>
   <description>
     <p>
-      FilmCraft is a video editor. Edit video, color and sound
+      O Filme é um editor de vídeo livre e nativo: edição em linha do tempo, correção de cor com
+      escopos, efeitos, títulos e legendas, mixagem de áudio e exportação.
+    </p>
+    <p>
+      Baseado no FilmCraft, do ArtCraft Team e contribuidores (MIT ou Apache 2.0).
     </p>
   </description>
-  <launchable type="desktop-id">ai.storyteller.filmcraft.desktop</launchable>
-  <icon type="stock">ai.storyteller.filmcraft</icon>
+  <launchable type="desktop-id">br.ufrgs.fisilab.filme.desktop</launchable>
+  <icon type="stock">br.ufrgs.fisilab.filme</icon>
   <!-- Only url types known to appstream 0.15 (Ubuntu 22.04, where CI validates): no vcs-browser. -->
-  <url type="homepage">https://getartcraft.com/apps/filmcraft</url>
-  <url type="bugtracker">https://github.com/storytold/filmcraft/issues</url>
-  <url type="help">https://github.com/storytold/filmcraft</url>
-  <url type="contact">https://discord.gg/artcraft</url>
+  <url type="homepage">https://github.com/mrcandrade/larfic</url>
+  <url type="bugtracker">https://github.com/mrcandrade/fisilab-filme/issues</url>
   <categories>
     <category>AudioVideo</category>
     <category>Video</category>
@@ -33,13 +35,9 @@
     <keyword>timeline</keyword>
     <keyword>color grading</keyword>
     <keyword>nle</keyword>
+    <keyword xml:lang="pt-BR">editor de vídeo</keyword>
+    <keyword xml:lang="pt-BR">linha do tempo</keyword>
   </keywords>
-  <screenshots>
-    <screenshot type="default">
-      <caption>Color workspace: a documentary cut with Lumetri Color, scopes, captions and loudness meters</caption>
-      <image>https://raw.githubusercontent.com/storytold/filmcraft/main/docs/images/filmcraft-hero.png</image>
-    </screenshot>
-  </screenshots>
   <branding>
     <color type="primary" scheme_preference="light">#9fd0ff</color>
     <color type="primary" scheme_preference="dark">#1f64ba</color>
@@ -53,7 +51,7 @@
     <control>tablet</control>
   </supports>
   <provides>
-    <binary>filmcraft</binary>
+    <binary>fisilab-filme</binary>
     <mediatype>application/x-filmcraft</mediatype>
   </provides>
   <content_rating type="oars-1.1"/>

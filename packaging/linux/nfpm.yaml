@@ -3,7 +3,7 @@
 # exports VERSION and NFPM_ARCH.
 #
 #   nfpm package -f packaging/linux/nfpm.yaml -p deb -t dist/release/
-name: filmcraft
+name: fisilab-filme
 arch: ${NFPM_ARCH}
 platform: linux
 version: ${VERSION}
@@ -13,15 +13,16 @@ release: 1
 section: video
 priority: optional
 maintainer: ${FILMCRAFT_MAINTAINER}
-vendor: Learning Machines LLC
-homepage: https://getartcraft.com/apps/filmcraft
+vendor: FisiLab - LARFIC/UFRGS
+homepage: https://github.com/mrcandrade/larfic
 license: MIT OR Apache-2.0
 description: |-
-  Open-source, native video editor: edit video, color and sound.
-  Timeline editing with source and program monitors, color grading and scopes,
-  effects and keyframes, titles and captions, audio mixing with loudness meters,
-  and export; GPU compositing (wgpu).
-  Includes filmcraft-cli, a headless command runner, MCP server and exporter.
+  Filme: editor de vídeo livre e nativo da Suíte FisiLab (alternativa livre).
+  Edição em linha do tempo com monitores de origem e programa, correção de cor
+  com escopos, efeitos e quadros-chave, títulos e legendas, mixagem de áudio
+  com medidores de loudness e exportação; composição na GPU (wgpu).
+  Inclui o fisilab-filme-cli, um executor de comandos, servidor MCP e exportador.
+  Baseado no FilmCraft, do ArtCraft Team e contribuidores (MIT ou Apache 2.0).
 
 # The binaries link only glibc and libgcc_s directly. Windowing (X11/Wayland, xkbcommon) and the
 # GPU (Vulkan, EGL/GL) are loaded at runtime, so they are dependencies/recommendations here
@@ -61,11 +62,11 @@ overrides:
       - xdg-desktop-portal
 
 contents:
-  - src: ${STAGE}/usr/bin/filmcraft
-    dst: /usr/bin/filmcraft
+  - src: ${STAGE}/usr/bin/fisilab-filme
+    dst: /usr/bin/fisilab-filme
     file_info: { mode: 0755 }
-  - src: ${STAGE}/usr/bin/filmcraft-cli
-    dst: /usr/bin/filmcraft-cli
+  - src: ${STAGE}/usr/bin/fisilab-filme-cli
+    dst: /usr/bin/fisilab-filme-cli
     file_info: { mode: 0755 }
   - src: ${STAGE}/usr/share/
     dst: /usr/share/

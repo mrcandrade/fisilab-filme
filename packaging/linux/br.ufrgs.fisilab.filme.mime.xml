@@ -4,9 +4,10 @@
      The type name matches the macOS UTI's public.mime-type in packaging/macos/Info.plist.in. -->
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
   <mime-type type="application/x-filmcraft">
-    <comment>FilmCraft project</comment>
+    <comment>Filme project</comment>
+    <comment xml:lang="pt-BR">Projeto do Filme</comment>
     <sub-class-of type="application/json"/>
-    <icon name="ai.storyteller.filmcraft"/>
+    <icon name="br.ufrgs.fisilab.filme"/>
     <glob pattern="*.fcproj"/>
   </mime-type>
 </mime-info>
