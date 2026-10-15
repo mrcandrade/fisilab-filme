@@ -92,6 +92,6 @@ de Tecnologia Acadêmica. Este arquivo lista o que foi alterado e por quê.
   (a lista mostra “FisiLab Filme …”, mas o valor salvo é o original, por compatibilidade).
 - LICENSE-MIT, LICENSE-APACHE, ATTRIBUTION.md e o texto original do NOTICE (agora após o
   cabeçalho da Suíte FisiLab). O README original está em `README.upstream.md`.
-- Os empacotamentos de macOS e FreeBSD em `packaging/` não foram adaptados (fora do escopo da
-  suíte); o do Flatpak também não.
+- O empacotamento de macOS (DMG universal) em `packaging/macos/` usa os novos nomes, o ícone e os
+  ids da suíte. Os de FreeBSD e Flatpak não foram adaptados (fora do escopo da suíte).
 - A documentação em `docs/` (histórico do projeto original).
