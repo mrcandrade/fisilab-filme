@@ -87,7 +87,8 @@
 	Create Proxies…	Створити проксі…
 	Cut	Вирізати
 	Dark	Темний
-	Darkest	Найтемніший
+	Noite	Noite
+	Dia	Dia
 	Delete Render Files	Видалити файли рендерингу
 	Delete Render Files In to Out	Видалити файли рендерингу між початковою та кінцевою позначками
 	Delete Tracks…	Видалити доріжки…
@@ -178,7 +179,6 @@
 	Left	Ліворуч
 	Libraries	Бібліотеки
 	Lift	Вилучити без зсуву
-	Light	Світлий
 	Link	Зв’язати
 	Link Media…	Прив’язати медіа…
 	Linked Selection	Пов’язане виділення

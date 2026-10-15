@@ -101,7 +101,8 @@
 	Create Proxies…	Proxys erstellen…
 	Cut	Ausschneiden
 	Dark	Dunkel
-	Darkest	Sehr dunkel
+	Noite	Noite
+	Dia	Dia
 	Delete Render Files	Renderdateien löschen
 	Delete Render Files In to Out	Renderdateien von In bis Out löschen
 	Delete Tracks…	Spuren löschen…
@@ -201,7 +202,6 @@
 	Left	Links
 	Libraries	Bibliotheken
 	Lift	Herausheben
-	Light	Hell
 	Link	Verknüpfen
 	Link Media…	Medien verknüpfen…
 	Linked Selection	Verknüpfte Auswahl

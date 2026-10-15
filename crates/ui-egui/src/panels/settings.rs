@@ -244,7 +244,7 @@ fn theme_preview(ui: &mut Ui, t: &Tokens, width: f32) {
 fn theme_card(app: &mut FilmcraftApp, ui: &mut Ui, d: &mut SettingsDraft, key: &str, title: &str, opts: &[(&str, &str)], active: bool, width: f32) {
     let t = app.tokens;
     let current = choice_text(get(&d.values, key));
-    let shown = opts.iter().find(|(v, _)| *v == current).or(opts.first()).map_or("ufrgsNoite", |(v, _)| v);
+    let shown = opts.iter().find(|(v, _)| *v == current).or(opts.first()).map_or("darkest", |(v, _)| v);
     let highlight = settings::parse_hex(&choice_text(get(&d.values, "appearance.highlightColor")));
     let contrast = get(&d.values, "appearance.accessibleContrast").as_bool().unwrap_or(false);
     let look = Tokens::for_kind(crate::theme::ThemeKind::from_pref(shown)).with_appearance(highlight, contrast);
@@ -982,10 +982,10 @@ mod tests {
         if let Some(path) = std::env::var_os("FILMCRAFT_FAVORITES_SCREENSHOT") {
             h.render().unwrap().save(path).unwrap();
         }
-        h.get_by_label("Light").click();
+        h.get_by_label("Dia").click();
         h.run_steps(3);
         assert_eq!(h.state().session.prefs.appearance.appearance_mode, "light");
-        assert_eq!(h.state().session.prefs.appearance.dark_theme, "ufrgsNoite");
+        assert_eq!(h.state().session.prefs.appearance.dark_theme, "darkest");
     }
 
     /// #457: on a desktop that reports 150%, UI Scale 100% makes a point one physical pixel. It is
@@ -1017,14 +1017,14 @@ mod tests {
         let ctx = egui::Context::default();
         let mut app = FilmcraftApp::new(filmcraft_engine::Session::default());
         app.apply_prefs(&ctx);
-        assert_eq!((app.session.prefs.appearance.appearance_mode.as_str(), app.tokens.kind), ("dark", ThemeKind::UfrgsNoite), "new users get UFRGS Noite");
+        assert_eq!((app.session.prefs.appearance.appearance_mode.as_str(), app.tokens.kind), ("dark", ThemeKind::Dark), "new users keep Darkest (Noite)");
         app.session.execute("prefs.set", json!({"values": {"appearance.darkTheme": "dark"}})).unwrap();
         app.hooks.system_theme = Some(Box::new(|_| Some(egui::Theme::Dark)));
-        for (mode, shown) in [("auto", ThemeKind::Medium), ("light", ThemeKind::UfrgsDia), ("dark", ThemeKind::Medium), ("auto", ThemeKind::Medium)] {
+        for (mode, shown) in [("auto", ThemeKind::Medium), ("light", ThemeKind::Light), ("dark", ThemeKind::Medium), ("auto", ThemeKind::Medium)] {
             cycle_appearance(&mut app, &ctx);
             assert_eq!(app.session.prefs.appearance.appearance_mode, mode);
             assert_eq!(app.tokens.kind, shown, "{mode}");
-            assert_eq!((app.session.prefs.appearance.dark_theme.as_str(), app.session.prefs.appearance.light_theme.as_str()), ("dark", "ufrgsDia"));
+            assert_eq!((app.session.prefs.appearance.dark_theme.as_str(), app.session.prefs.appearance.light_theme.as_str()), ("dark", "light"));
         }
         // View ▸ Appearance picks a theme and fixes the mode to its family
         set_theme(&mut app, &ctx, ThemeKind::Light);
@@ -1051,24 +1051,24 @@ mod tests {
         }));
         app.session.execute("prefs.set", json!({"key": "appearance.appearanceMode", "value": "auto"})).unwrap();
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::UfrgsDia);
+        assert_eq!(app.tokens.kind, ThemeKind::Light);
         assert!(!app.ui.dark);
         assert_eq!(ctx.theme(), egui::Theme::Light, "egui's style follows Filme's choice");
         system.store(1, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite);
+        assert_eq!(app.tokens.kind, ThemeKind::Dark);
         assert_eq!(ctx.theme(), egui::Theme::Dark);
         system.store(2, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::UfrgsDia);
+        assert_eq!(app.tokens.kind, ThemeKind::Light);
         system.store(0, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite, "no answer: dark");
+        assert_eq!(app.tokens.kind, ThemeKind::Dark, "no answer: dark");
         // a fixed mode ignores the system
         app.session.execute("prefs.set", json!({"key": "appearance.appearanceMode", "value": "dark"})).unwrap();
         system.store(2, Ordering::Relaxed);
         app.apply_prefs(&ctx);
-        assert_eq!(app.tokens.kind, ThemeKind::UfrgsNoite);
+        assert_eq!(app.tokens.kind, ThemeKind::Dark);
     }
 
     #[test]

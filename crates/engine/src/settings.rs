@@ -92,7 +92,7 @@ impl Default for GeneralPrefs {
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct AppearancePrefs {
-    /// Legacy single "Color Theme": `ufrgsNoite` | `ufrgsDia` | `darkest` | `dark` | `light`. Setting it (old settings files,
+    /// Legacy single "Color Theme": `darkest` | `dark` | `light`. Setting it (old settings files,
     /// automation, View ▸ Appearance) selects that theme and fixes the mode to its family. It is
     /// kept in line with the fields below ([`AppearancePrefs::sync_color_theme`]): the light or
     /// dark theme of a fixed mode, and the dark theme in Auto (whose shown theme depends on the
@@ -100,9 +100,9 @@ pub struct AppearancePrefs {
     pub color_theme: String,
     /// "Appearance Mode": `auto` (follow the operating system) | `dark` (default) | `light`.
     pub appearance_mode: String,
-    /// The theme shown in dark mode: `ufrgsNoite` (default) | `darkest` | `dark`.
+    /// The theme shown in dark mode: `darkest` (default, shown as "Noite") | `dark`.
     pub dark_theme: String,
-    /// The theme shown in light mode: `ufrgsDia` (default) | `light`.
+    /// The theme shown in light mode: `light` (shown as "Dia").
     pub light_theme: String,
     /// Theme shortcuts for the header context menu.
     pub favorite_themes: Vec<String>,
@@ -118,11 +118,10 @@ pub struct AppearancePrefs {
 impl Default for AppearancePrefs {
     fn default() -> Self {
         Self {
-            // Suíte FisiLab: "UFRGS Noite" by default, "UFRGS Dia" as the light theme
-            color_theme: "ufrgsNoite".into(),
+            color_theme: "darkest".into(),
             appearance_mode: "dark".into(),
-            dark_theme: "ufrgsNoite".into(),
-            light_theme: "ufrgsDia".into(),
+            dark_theme: "darkest".into(),
+            light_theme: "light".into(),
             favorite_themes: Vec::new(),
             accessible_contrast: false,
             highlight_color: DEFAULT_HIGHLIGHT.into(),
@@ -139,7 +138,7 @@ impl AppearancePrefs {
         UI_SCALES.iter().any(|(k, _)| *k == self.ui_scale).then(|| self.ui_scale.parse::<f32>().ok()).flatten().map(|pct| pct / 100.0)
     }
 
-    /// The theme to show (`ufrgsNoite` | `ufrgsDia` | `darkest` | `dark` | `light`): the light or dark theme of the mode. Auto
+    /// The theme to show (`darkest` | `dark` | `light`): the light or dark theme of the mode. Auto
     /// follows `system_light` (the operating system's appearance) and is dark without an answer.
     pub fn shown_theme(&self, system_light: Option<bool>) -> &str {
         let light = match self.appearance_mode.as_str() {
@@ -179,9 +178,7 @@ impl AppearancePrefs {
     }
 }
 
-/// The default highlight: the accent of the default theme, UFRGS Noite (the brand's flame red,
-/// `fisilab_brand::palette::VERMELHO_VIVO`). The UI reads the default as "the theme's own accent".
-pub const DEFAULT_HIGHLIGHT: &str = "#c8402f";
+pub const DEFAULT_HIGHLIGHT: &str = "#2f6bdf";
 
 /// Settings ▸ Audio Hardware (the cpal output on desktop).
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -914,7 +911,7 @@ const STARTUP: &[(&str, &str)] = &[("showHome", "Show Home"), ("openMostRecent",
 const OPENING: &[(&str, &str)] = &[("showOpenDialog", "Show Open Dialog"), ("showHome", "Show Home")];
 const BIN_OPEN: &[(&str, &str)] = &[("openInPlace", "Open in place"), ("openNewTab", "Open new tab"), ("openNewWindow", "Open in new window")];
 const PROJECT_OPEN: &[(&str, &str)] = &[("openNewTab", "Open new tab"), ("openNewWindow", "Open in new window")];
-const THEMES: &[(&str, &str)] = &[("ufrgsNoite", "UFRGS Noite"), ("ufrgsDia", "UFRGS Dia"), ("darkest", "Darkest"), ("dark", "Dark"), ("light", "Light")];
+const THEMES: &[(&str, &str)] = &[("darkest", "Noite"), ("light", "Dia"), ("dark", "Dark")];
 pub const APPEARANCE_MODES: &[(&str, &str)] = &[("auto", "Sync with system"), ("dark", "Dark"), ("light", "Light")];
 pub const UI_SCALES: &[(&str, &str)] = &[
     ("auto", "Auto (system)"),
@@ -927,8 +924,8 @@ pub const UI_SCALES: &[(&str, &str)] = &[
     ("250", "250%"),
     ("300", "300%"),
 ];
-pub const DARK_THEMES: &[(&str, &str)] = &[("ufrgsNoite", "UFRGS Noite"), ("darkest", "Darkest"), ("dark", "Dark")];
-pub const LIGHT_THEMES: &[(&str, &str)] = &[("ufrgsDia", "UFRGS Dia"), ("light", "Light")];
+pub const DARK_THEMES: &[(&str, &str)] = &[("darkest", "Noite"), ("dark", "Dark")];
+pub const LIGHT_THEMES: &[(&str, &str)] = &[("light", "Dia")];
 const MIXDOWN: &[(&str, &str)] = &[("front", "Front Only"), ("frontRear", "Front + Rear"), ("frontLfe", "Front + LFE"), ("frontRearLfe", "Front + Rear + LFE")];
 const AUDITION: &[(&str, &str)] = &[("scratch", "Scratch disk location for Captured Audio"), ("nextToMedia", "Next to original media files")];
 const BUFFERS: &[(&str, &str)] = &[("64", "64"), ("128", "128"), ("256", "256"), ("512", "512"), ("1024", "1024"), ("2048", "2048"), ("4096", "4096")];

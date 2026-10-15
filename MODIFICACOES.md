@@ -33,7 +33,7 @@ de Tecnologia Acadêmica. Este arquivo lista o que foi alterado e por quê.
   LUT `.cube`, `©too` do MP4, cabeçalho raster, campo `generator` do projeto) dizem “FisiLab Filme”.
 
 ### Identidade da Suíte FisiLab
-- Novo crate compartilhado `crates/fisilab-brand` (paleta, tela de abertura com a logo do CTA,
+- Novo crate compartilhado `crates/fisilab-brand` (paleta da marca, tela de abertura com a logo do CTA,
   janela “Sobre a Suíte FisiLab”), ligado ao aplicativo:
   - `APP_INFO` em `crates/ui-egui/src/lib.rs`;
   - `fisilab_brand::splash::enable()` em `apps/filmcraft/src/main.rs` (só no aplicativo desktop;
@@ -43,15 +43,12 @@ de Tecnologia Acadêmica. Este arquivo lista o que foi alterado e por quê.
 - Novo ícone (`assets/fisilab/fisilab-filme.ico` no executável Windows, `fisilab-filme-256.png` na janela).
 
 ### Paleta de cores
-- Dois temas novos, **UFRGS Noite** (escuro, padrão) e **UFRGS Dia** (claro), montados a partir dos
-  tons `NOITE`/`DIA` da marca, primeiros da lista em Preferências ▸ Aparência e em Exibir ▸
-  Aparência. Mantêm cantos, espaçamentos e alturas do tema original; só as cores mudam. As cores
-  que codificam dados (barra de render) foram mantidas.
-- UFRGS Noite é o padrão (preferências novas, nome desconhecido); UFRGS Dia é o tema claro padrão.
-- A cor de destaque padrão passou a ser o vermelho da marca (`#c8402f`) e significa “a cor do
-  próprio tema”: cada tema mantém o destaque com que foi desenhado; uma cor escolhida pelo usuário
-  continua substituindo-o.
-- Os temas originais (Darkest, Dark, Light) continuam disponíveis.
+- Paleta original do FilmCraft, sem alterações de cor. Os temas originais ganharam os nomes **Noite**
+  (escuro, o antigo Darkest, padrão) e **Dia** (claro, o antigo Light), primeiros da lista em Preferências ▸
+  Aparência e em Exibir ▸ Aparência; o terceiro tema original (Dark) continua disponível. Os ids
+  salvos (`darkest`, `dark`, `light`) não mudaram; `noite`/`night` e `dia`/`day` também são aceitos como nomes.
+- O destaque padrão continua sendo o azul original.
+- Português (Brasil) é o idioma da primeira execução (sem preferências salvas); a biblioteca continua com “idioma do sistema” como padrão.
 
 ### Idioma
 - Numa instalação nova (sem `preferences.json`), a interface abre em **português do Brasil**. A

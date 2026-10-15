@@ -3605,7 +3605,7 @@
 	Manifesto pelas tecnologias livres	自由な技術のためのマニフェスト
 	Projeto original (FilmCraft)	元のプロジェクト (FilmCraft)
 	Reportar um problema	問題を報告
-	UFRGS Noite	UFRGS Noite
-	UFRGS Dia	UFRGS Dia
+	Noite	Noite
+	Dia	Dia
 	Editor de vídeo não linear em Rust puro, parte da Suíte FisiLab (UFRGS). Baseado no FilmCraft, do ArtCraft Team e contribuidores.	純粋な Rust で書かれたノンリニア動画編集ソフト。Suíte FisiLab（UFRGS）の一部です。ArtCraft Team と貢献者による FilmCraft をもとにしています。
 	Abre a janela Sobre a Suíte FisiLab: créditos, manifesto e parceiros.	Suíte FisiLab についてのウィンドウを開きます（クレジット、マニフェスト、パートナー）。

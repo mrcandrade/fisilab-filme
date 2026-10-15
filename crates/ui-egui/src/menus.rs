@@ -102,13 +102,11 @@ pub const UI_COMMANDS: &[UiCommand] = &[
     uic!("multicam.editCamerasDialog", "Edit Cameras…", [], None),
     uic!("voiceover.recordToggle", "Voice-over Record", [], None),
     uic!("voiceover.settingsDialog", "Voice-Over Record Settings…", [], None),
-    // ids follow `ThemeKind`, labels follow Settings ▸ Appearance ▸ Color Theme (`ufrgsNoite`,
-    // `ufrgsDia`, `darkest`, `dark`, `light`); the Suíte FisiLab themes come first
-    uic!("view.theme.ufrgsNoite", "UFRGS Noite", ["View", "Appearance"], None),
-    uic!("view.theme.ufrgsDia", "UFRGS Dia", ["View", "Appearance"], None),
-    uic!("view.theme.dark", "Darkest", ["View", "Appearance"], None),
+    // ids follow `ThemeKind`, labels follow Settings ▸ Appearance ▸ Color Theme (`darkest` = "Noite",
+    // `light` = "Dia", `dark`); Suíte FisiLab lists Noite and Dia first
+    uic!("view.theme.dark", "Noite", ["View", "Appearance"], None),
+    uic!("view.theme.light", "Dia", ["View", "Appearance"], None),
     uic!("view.theme.medium", "Dark", ["View", "Appearance"], None),
-    uic!("view.theme.light", "Light", ["View", "Appearance"], None),
     uic!("view.appearanceMode.next", "Next Appearance Mode", ["View", "Appearance"], None),
     uic!("window.workspace.editing", "Editing", ["Window", "Workspaces"], Some("Alt+Shift+1")),
     uic!("window.workspace.assembly", "Assembly", ["Window", "Workspaces"], Some("Alt+Shift+2")),

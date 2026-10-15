@@ -657,7 +657,7 @@ impl FilmcraftApp {
         self.tokens = Tokens::for_kind(k).with_appearance(highlight, a.accessible_contrast);
         theme::apply_visuals(ctx, &self.tokens);
         self.apply_tooltips(ctx);
-        self.ui.dark = !k.is_light();
+        self.ui.dark = k != ThemeKind::Light;
     }
 
     /// The system appearance: the host's reading, else what the windowing toolkit reports.
